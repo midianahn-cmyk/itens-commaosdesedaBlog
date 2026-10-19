@@ -9,68 +9,34 @@
 (function () {
   'use strict';
 
-  if (window.__catalogoComMaosDeSedaInstalado) return;
-  window.__catalogoComMaosDeSedaInstalado = true;
+  var ID_SCRIPT = 'cms-instalador-catalogo-2026';
+  var ID_CARROSSEL = 'cms-carrossel-isolado-2026';
 
-  var base =
-    'https://cdn.jsdelivr.net/gh/midianahn-cmyk/itens-commaosdesedaBlog@main/';
-
-  function carregarCSS() {
-    if (document.getElementById('catalogo-com-maos-de-seda-css')) return;
-
-    var link = document.createElement('link');
-    link.id = 'catalogo-com-maos-de-seda-css';
-    link.rel = 'stylesheet';
-    link.href = base + 'catalogo.css';
-    document.head.appendChild(link);
+  // Impede a instalação duplicada
+  if (
+    document.getElementById(ID_SCRIPT) ||
+    document.getElementById(ID_CARROSSEL)
+  ) {
+    return;
   }
 
-  function carregarHTML() {
-    if (document.getElementById('catalogo-com-maos-de-seda')) return;
+  var script = document.createElement('script');
 
-    fetch(base + 'catalogo.html')
-      .then(function (resposta) {
-        if (!resposta.ok) throw new Error('Erro ao carregar catalogo.html');
-        return resposta.text();
-      })
-      .then(function (html) {
-        var container = document.createElement('div');
-        container.id = 'catalogo-com-maos-de-seda';
-        container.innerHTML = html;
-        document.body.appendChild(container);
+  script.id = ID_SCRIPT;
+  script.src =
+    'https://cdn.jsdelivr.net/gh/midianahn-cmyk/itens-commaosdesedaBlog@main/catalogo.js';
 
-        carregarJS();
-      })
-      .catch(function (erro) {
-        console.error('Com Mãos de Seda:', erro);
-        window.__catalogoComMaosDeSedaInstalado = false;
-      });
-  }
+  script.async = false;
 
-  function carregarJS() {
-    if (document.getElementById('catalogo-com-maos-de-seda-js')) return;
+  script.onerror = function () {
+    console.error(
+      'Com Mãos de Seda: não foi possível carregar catalogo.js. ' +
+      'Confira o nome do arquivo e a branch main no GitHub.'
+    );
 
-    var script = document.createElement('script');
-    script.id = 'catalogo-com-maos-de-seda-js';
-    script.src = base + 'catalogo.js';
-    script.async = true;
+    script.remove();
+  };
 
-    script.onerror = function () {
-      console.error('Com Mãos de Seda: erro ao carregar catalogo.js.');
-      window.__catalogoComMaosDeSedaInstalado = false;
-    };
+  (document.head || document.documentElement).appendChild(script);
 
-    document.body.appendChild(script);
-  }
-
-  function iniciar() {
-    carregarCSS();
-    carregarHTML();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', iniciar);
-  } else {
-    iniciar();
-  }
 })();
