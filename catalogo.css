@@ -1,0 +1,151 @@
+
+/* =====================================================
+   CARROSSEL RESPONSIVO — COM MÃOS DE SEDA
+   Arquivo: carrossel.css
+   © 2026 Com Mãos de Seda
+   ===================================================== */
+
+/* CONTAINER PRINCIPAL */
+#cms-carrossel-isolado-2026 {
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 10px 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* ÁREA DAS IMAGENS */
+#cms-carrossel-isolado-2026 .cms26-janela {
+  width: 100%;
+  overflow: hidden;
+}
+
+/* FAIXA DESLIZANTE */
+#cms-carrossel-isolado-2026 .cms26-faixa {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  transition: transform 0.45s ease;
+  will-change: transform;
+}
+
+/* CADA IMAGEM */
+#cms-carrossel-isolado-2026 .cms26-item {
+  flex: 0 0 calc((100% - 48px) / 5);
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* IMAGENS */
+#cms-carrossel-isolado-2026 .cms26-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* BOTÕES DE NAVEGAÇÃO */
+#cms-carrossel-isolado-2026 .cms26-seta {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  color: #ffffff;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+#cms-carrossel-isolado-2026 .cms26-seta:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+#cms-carrossel-isolado-2026 .cms26-anterior {
+  left: 8px;
+}
+
+#cms-carrossel-isolado-2026 .cms26-proxima {
+  right: 8px;
+}
+
+/* PAGINAÇÃO */
+#cms-carrossel-isolado-2026 .cms26-paginacao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+#cms-carrossel-isolado-2026 .cms26-ponto {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #cccccc;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+#cms-carrossel-isolado-2026 .cms26-ponto.cms26-ativo {
+  background: #555555;
+  transform: scale(1.2);
+}
+
+/* TABLETS: 3 IMAGENS */
+@media (max-width: 1024px) {
+  #cms-carrossel-isolado-2026 .cms26-item {
+    flex-basis: calc((100% - 24px) / 3);
+  }
+}
+
+/* CELULARES: 2 IMAGENS */
+@media (max-width: 600px) {
+  #cms-carrossel-isolado-2026 .cms26-faixa {
+    gap: 8px;
+  }
+
+  #cms-carrossel-isolado-2026 .cms26-item {
+    flex-basis: calc((100% - 8px) / 2);
+  }
+
+  #cms-carrossel-isolado-2026 .cms26-seta {
+    width: 32px;
+    height: 32px;
+    font-size: 21px;
+  }
+}
+
+/* TELAS MUITO ESTREITAS: 1 IMAGEM */
+@media (max-width: 360px) {
+  #cms-carrossel-isolado-2026 .cms26-item {
+    flex-basis: 100%;
+  }
+}
+
+/* ACESSIBILIDADE: REDUZIR MOVIMENTO */
+@media (prefers-reduced-motion: reduce) {
+  #cms-carrossel-isolado-2026 .cms26-faixa,
+  #cms-carrossel-isolado-2026 .cms26-seta,
+  #cms-carrossel-isolado-2026 .cms26-ponto {
+    transition: none;
+  }
+}
