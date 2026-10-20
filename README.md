@@ -1,3 +1,6 @@
 # itens-commaosdesedaBlog
-Grandes marcas: <script src="[https://](https://cdn.jsdelivr.net/gh/)midianahn-cmyk.github.io/itens-commaosdesedaBlog/grandesmarcas.js"></script>
-Catalogo: <script src="[https://](https://cdn.jsdelivr.net/gh/)midianahn-cmyk.github.io/itens-commaosdesedaBlog/catalogo-intalador.js"></script>
+
+Catalogo slide
+<script src="https://cdn.jsdelivr.net/gh/midianahn-cmyk/itens-commaosdesedaBlogEfeito-bruxinha-voadora@main/catalogo-intalador.js"></script>
+Grandes marcas
+<script src="https://cdn.jsdelivr.net/gh/midianahn-cmyk/itens-commaosdesedaBlog@main/grandesmarcas.js"></script>
