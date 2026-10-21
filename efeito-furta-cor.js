@@ -1,20 +1,22 @@
 
 /* =====================================================
-   EFEITO FURTA-COR ARCO-ÍRIS — ISOLADO
-   Com Mãos de Seda © 2026
-
-   Não altera classes, estilos, dimensões ou atributos
-   das imagens originais. Não interfere no layout.
+   EFEITO FURTA-COR ARCO-ÍRIS — COM MÃOS DE SEDA
+   Restrito às imagens dentro de .post-body
+   © 2026 Com Mãos de Seda
 ===================================================== */
+
 (function () {
   'use strict';
 
-  if (window.__CMS_FURTA_COR_ISOLADO__) return;
-  window.__CMS_FURTA_COR_ISOLADO__ = true;
+  if (window.__CMS_FURTA_COR_POSTBODY__) return;
+  window.__CMS_FURTA_COR_POSTBODY__ = true;
 
+  var seletorConteudo = '.post-body';
   var overlay = document.createElement('div');
+  var estilo = document.createElement('style');
 
   overlay.setAttribute('aria-hidden', 'true');
+  overlay.id = 'cms-furta-cor-overlay';
 
   overlay.style.cssText = [
     'position:fixed',
@@ -23,7 +25,7 @@
     'width:0',
     'height:0',
     'pointer-events:none',
-    'z-index:2147483646',
+    'z-index:1000',
     'opacity:0',
     'overflow:hidden',
     'background:linear-gradient(115deg,rgba(255,70,180,.42),rgba(170,90,255,.42),rgba(60,220,255,.42),rgba(255,235,100,.44),rgba(255,100,190,.42))',
@@ -32,27 +34,25 @@
     'transition:opacity .22s ease'
   ].join(';');
 
-  var animationStyle = document.createElement('style');
-
-  animationStyle.textContent =
+  estilo.textContent =
     '@keyframes cmsFurtaCorMovimento{' +
     '0%{background-position:100% 50%}' +
     '100%{background-position:0% 50%}' +
     '}';
 
-  function montar() {
+  function iniciar() {
     if (!document.body) return;
 
-    document.head.appendChild(animationStyle);
+    document.head.appendChild(estilo);
     document.body.appendChild(overlay);
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', montar, {
+    document.addEventListener('DOMContentLoaded', iniciar, {
       once: true
     });
   } else {
-    montar();
+    iniciar();
   }
 
   var imagemAtual = null;
@@ -60,25 +60,25 @@
 
   function imagemPermitida(img) {
     if (!img || img.tagName !== 'IMG') return false;
-    if (!img.complete || !img.naturalWidth) return false;
 
-    if (img.hasAttribute('data-sem-furta-cor')) {
-      return false;
-    }
+    // Restringir às imagens do conteúdo das postagens
+    if (!img.closest(seletorConteudo)) return false;
 
+    // Ignorar imagens explicitamente excluídas
+    if (img.hasAttribute('data-sem-furta-cor')) return false;
+
+    // Ignorar botões e controles
     if (img.closest(
       'button, input, select, textarea, ' +
       '[role="button"], [role="slider"], ' +
       '[contenteditable="true"]'
-    )) {
-      return false;
-    }
+    )) return false;
+
+    if (!img.complete || !img.naturalWidth) return false;
 
     var rect = img.getBoundingClientRect();
 
-    if (rect.width < 40 || rect.height < 40) {
-      return false;
-    }
+    if (rect.width < 40 || rect.height < 40) return false;
 
     if (getComputedStyle(img).visibility === 'hidden') {
       return false;
@@ -89,7 +89,6 @@
 
   function esconder() {
     imagemAtual = null;
-
     overlay.style.opacity = '0';
     overlay.style.animation = 'none';
     overlay.style.width = '0';
@@ -109,6 +108,7 @@
     }
 
     var rect = imagemAtual.getBoundingClientRect();
+    var estiloImagem = getComputedStyle(imagemAtual);
 
     if (
       rect.bottom <= 0 ||
@@ -120,17 +120,12 @@
       return;
     }
 
-    // Reproduzir as bordas originais sem modificá-las.
-    var estiloImagem = getComputedStyle(imagemAtual);
-
     overlay.style.left = rect.left + 'px';
     overlay.style.top = rect.top + 'px';
     overlay.style.width = rect.width + 'px';
     overlay.style.height = rect.height + 'px';
     overlay.style.borderRadius = estiloImagem.borderRadius;
-
     overlay.style.opacity = '1';
-
     overlay.style.animation =
       'cmsFurtaCorMovimento 2.5s linear infinite';
   }
@@ -161,7 +156,6 @@
     }
   }, true);
 
-  // Evitar manter o efeito durante navegação por teclado.
   document.addEventListener('focusin', esconder, true);
 
   window.addEventListener(
@@ -177,7 +171,6 @@
     }
   );
 
-  // Limpar o efeito se a imagem for removida da página.
   var observador = new MutationObserver(function () {
     if (imagemAtual && !imagemAtual.isConnected) {
       esconder();
