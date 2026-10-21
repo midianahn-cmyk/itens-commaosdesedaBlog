@@ -23,7 +23,7 @@
   window.cmsRastroDouradoAtivo = true;
 
   var limiteParticulas = 55;
-  var intervaloMinimo = 24;
+  var intervaloMinimo = 4;
   var ultimaParticula = 0;
   var particulas = [];
   var larguraTela = window.innerWidth;
