@@ -1,7 +1,7 @@
 
 /* ==========================================
    EFEITO FURTA-COR ARCO-ÍRIS
-   Com Mãos de Seda - 2026 www.commaosdesedaoficial.com
+   Com Mãos de Seda - 2026
    Não altera dimensões, bordas ou estrutura.
 ========================================== */
 
