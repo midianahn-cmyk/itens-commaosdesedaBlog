@@ -24,7 +24,7 @@
 
   var limiteParticulas = 55;
   var intervaloMinimo = 4;
-  var ultimaParticula = 0;
+  var ultimaParticula = 10;
   var particulas = [];
   var larguraTela = window.innerWidth;
   var alturaTela = window.innerHeight;
