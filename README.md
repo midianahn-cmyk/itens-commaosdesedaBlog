@@ -4,3 +4,5 @@ Catalogo slide
 <script src="https://cdn.jsdelivr.net/gh/midianahn-cmyk/itens-commaosdesedaBlogEfeito-bruxinha-voadora@main/catalogo-intalador.js"></script>
 Grandes marcas
 <script src="https://cdn.jsdelivr.net/gh/midianahn-cmyk/itens-commaosdesedaBlog@main/grandesmarcas.js"></script>
+EfeitoArcoriri nas imagems
+<script src="https://cdn.jsdelivr.net/gh/midianahn-cmyk/itens-commaosdesedaBlog@main/efeito-furta-cor.js"></script>
