@@ -2,19 +2,18 @@
 (function () {
   'use strict';
 
-  // Evita instalar esta versão mais de uma vez.
-  if (window.efeitoArcoIrisPostBody) return;
-  window.efeitoArcoIrisPostBody = true;
+  if (window.efeitoArcoIrisGradualPostBody) return;
+  window.efeitoArcoIrisGradualPostBody = true;
 
   var estilo = document.createElement('style');
 
   estilo.textContent = `
-    .post-body img.efeito-arco-iris {
-      transition: filter 0.35s ease;
+    .post-body img.efeito-arco-iris-gradual {
+      transition: filter 0.4s ease;
     }
 
-    .post-body img.efeito-arco-iris:hover {
-      filter: hue-rotate(140deg) saturate(2) brightness(1.08);
+    .post-body img.efeito-arco-iris-gradual:hover {
+      filter: hue-rotate(120deg) saturate(1.8);
     }
   `;
 
@@ -22,7 +21,7 @@
 
   function prepararImagens() {
     document.querySelectorAll('.post-body img').forEach(function (img) {
-      img.classList.add('efeito-arco-iris');
+      img.classList.add('efeito-arco-iris-gradual');
     });
   }
 
