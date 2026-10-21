@@ -21,9 +21,9 @@
   window.cmsRastroDouradoAtivo = true;
 
   // CONFIGURAÇÕES DO EFEITO
-  var limiteParticulas = 180;
-  var intervaloMinimo = 5;
-  var particulasPorMovimento = 3;
+  var limiteParticulas = 650;       // Antes: 180
+  var intervaloMinimo = 2;          // Antes: 5
+  var particulasPorMovimento = 8;    // Antes: 3
   var ultimaParticula = 0;
   var particulas = [];
   var larguraTela = window.innerWidth;
@@ -71,36 +71,35 @@
   }
 
   function criarParticula(x, y) {
-    if (particulas.length >= limiteParticulas) {
-      return;
-    }
+    if (particulas.length >= limiteParticulas) return;
 
     var sorteio = Math.random();
 
-    var tipo = sorteio < 0.70
+    // Mais estrelas grandes e pontos cintilantes
+    var tipo = sorteio < 0.68
       ? 'estrela'
-      : sorteio < 0.85
+      : sorteio < 0.90
         ? 'ponto'
         : 'brilho';
 
     particulas.push({
-      x: x + numeroAleatorio(-12, 12),
-      y: y + numeroAleatorio(-12, 12),
+      x: x + numeroAleatorio(-22, 22),
+      y: y + numeroAleatorio(-22, 22),
 
-      vx: numeroAleatorio(-1.2, 1.2),
-      vy: numeroAleatorio(-1.6, 0.5),
+      vx: numeroAleatorio(-1.8, 1.8),
+      vy: numeroAleatorio(-2.0, 0.8),
 
       tamanho: tipo === 'estrela'
-        ? numeroAleatorio(6, 12)
+        ? numeroAleatorio(7, 17)
         : tipo === 'ponto'
-          ? numeroAleatorio(1.5, 3.5)
-          : numeroAleatorio(3, 6),
+          ? numeroAleatorio(1.5, 4.5)
+          : numeroAleatorio(4, 9),
 
       tipo: tipo,
       vida: 1,
 
-      // Duração maior para deixar o rastro prolongado
-      decaimento: numeroAleatorio(0.006, 0.012),
+      // Maior duração para alongar o rastro
+      decaimento: numeroAleatorio(0.0025, 0.006),
 
       rotacao: numeroAleatorio(0, Math.PI),
       giro: numeroAleatorio(-0.035, 0.035),
@@ -137,9 +136,11 @@
     contexto.save();
 
     contexto.globalAlpha = Math.max(0, p.vida);
-    contexto.fillStyle = '#FFD76A';
-    contexto.shadowColor = '#FFCF4D';
-    contexto.shadowBlur = 10;
+
+    // Dourado mais luminoso
+    contexto.fillStyle = '#FFF2A6';
+    contexto.shadowColor = '#FFB800';
+    contexto.shadowBlur = 22;
 
     if (p.tipo === 'estrela') {
       desenharEstrela(p.x, p.y, p.tamanho, p.rotacao);
@@ -151,7 +152,7 @@
 
     } else {
       var pulso =
-        0.7 + Math.sin(tempo / 130 + p.fase) * 0.3;
+        0.65 + Math.sin(tempo / 100 + p.fase) * 0.35;
 
       var r = p.tamanho * pulso;
 
