@@ -90,9 +90,9 @@
       vx: numeroAleatorio(-0.65, 0.65),
       vy: numeroAleatorio(-1.1, 0.25),
 
-      tamanho: tipo === 'estrela'
-        ? numeroAleatorio(3, 6)
-        : numeroAleatorio(1, 2.7),
+    tamanho: tipo === 'estrela'
+  ? numeroAleatorio(6, 12)
+  : numeroAleatorio(1.5, 3.5),
 
       tipo: tipo,
       vida: 1,
