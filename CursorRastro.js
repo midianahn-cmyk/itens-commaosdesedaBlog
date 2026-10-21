@@ -9,10 +9,8 @@
 (function () {
   'use strict';
 
-  // Impede a instalação duplicada
   if (window.cmsRastroDouradoAtivo) return;
 
-  // Não executar em dispositivos sem mouse
   if (
     window.matchMedia &&
     window.matchMedia('(hover: none)').matches
@@ -22,9 +20,11 @@
 
   window.cmsRastroDouradoAtivo = true;
 
-  var limiteParticulas = 55;
-  var intervaloMinimo = 4;
-  var ultimaParticula = 10;
+  // CONFIGURAÇÕES DO EFEITO
+  var limiteParticulas = 180;
+  var intervaloMinimo = 5;
+  var particulasPorMovimento = 3;
+  var ultimaParticula = 0;
   var particulas = [];
   var larguraTela = window.innerWidth;
   var alturaTela = window.innerHeight;
@@ -33,7 +33,6 @@
     window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Camada independente, sem ocupar espaço no layout
   var camada = document.createElement('canvas');
   camada.id = 'cms-rastro-estrelas-douradas';
   camada.setAttribute('aria-hidden', 'true');
@@ -73,30 +72,36 @@
 
   function criarParticula(x, y) {
     if (particulas.length >= limiteParticulas) {
-      particulas.shift();
+      return;
     }
 
     var sorteio = Math.random();
 
-    var tipo = sorteio < 0.45
+    var tipo = sorteio < 0.70
       ? 'estrela'
-      : sorteio < 0.78
+      : sorteio < 0.85
         ? 'ponto'
         : 'brilho';
 
     particulas.push({
-      x: x + numeroAleatorio(-7, 7),
-      y: y + numeroAleatorio(-7, 7),
-      vx: numeroAleatorio(-0.65, 0.65),
-      vy: numeroAleatorio(-1.1, 0.25),
+      x: x + numeroAleatorio(-12, 12),
+      y: y + numeroAleatorio(-12, 12),
 
-    tamanho: tipo === 'estrela'
-  ? numeroAleatorio(6, 12)
-  : numeroAleatorio(1.5, 3.5),
+      vx: numeroAleatorio(-1.2, 1.2),
+      vy: numeroAleatorio(-1.6, 0.5),
+
+      tamanho: tipo === 'estrela'
+        ? numeroAleatorio(6, 12)
+        : tipo === 'ponto'
+          ? numeroAleatorio(1.5, 3.5)
+          : numeroAleatorio(3, 6),
 
       tipo: tipo,
       vida: 1,
-      decaimento: numeroAleatorio(0.018, 0.032),
+
+      // Duração maior para deixar o rastro prolongado
+      decaimento: numeroAleatorio(0.006, 0.012),
+
       rotacao: numeroAleatorio(0, Math.PI),
       giro: numeroAleatorio(-0.035, 0.035),
       fase: numeroAleatorio(0, Math.PI * 2)
@@ -112,6 +117,7 @@
     for (var i = 0; i < 8; i++) {
       var angulo = i * Math.PI / 4 - Math.PI / 2;
       var r = i % 2 === 0 ? raio : raio * 0.28;
+
       var px = Math.cos(angulo) * r;
       var py = Math.sin(angulo) * r;
 
@@ -133,7 +139,7 @@
     contexto.globalAlpha = Math.max(0, p.vida);
     contexto.fillStyle = '#FFD76A';
     contexto.shadowColor = '#FFCF4D';
-    contexto.shadowBlur = 7;
+    contexto.shadowBlur = 10;
 
     if (p.tipo === 'estrela') {
       desenharEstrela(p.x, p.y, p.tamanho, p.rotacao);
@@ -144,8 +150,9 @@
       contexto.fill();
 
     } else {
-      // Brilho em forma de cruz luminosa
-      var pulso = 0.7 + Math.sin(tempo / 130 + p.fase) * 0.3;
+      var pulso =
+        0.7 + Math.sin(tempo / 130 + p.fase) * 0.3;
+
       var r = p.tamanho * pulso;
 
       contexto.fillRect(
@@ -178,6 +185,7 @@
 
       p.x += p.vx;
       p.y += p.vy;
+
       p.vy -= 0.006;
       p.rotacao += p.giro;
       p.vida -= p.decaimento;
@@ -211,10 +219,7 @@
 
     ultimaParticula = agora;
 
-    criarParticula(evento.clientX, evento.clientY);
-
-    // Em alguns movimentos, acrescenta um brilho extra
-    if (Math.random() < 0.38) {
+    for (var i = 0; i < particulasPorMovimento; i++) {
       criarParticula(evento.clientX, evento.clientY);
     }
 
@@ -236,7 +241,6 @@
       passive: true
     });
 
-    // Limpa o canvas quando a página fica oculta
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) {
         particulas.length = 0;
