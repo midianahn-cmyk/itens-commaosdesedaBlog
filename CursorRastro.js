@@ -1,6 +1,6 @@
 
 /* =====================================================
-   RASTRO DE ESTRELAS E BRILHOS — DOURADO MÁGICO
+   RASTRO DE ESTRELAS E BRILHOS — CAUDA DE COMETA DOURADA
    Criado por: Com Mãos de Seda
    Site: https://www.commaosdesedaoficial.com
    © 2026 Com Mãos de Seda
@@ -20,12 +20,31 @@
 
   window.cmsRastroDouradoAtivo = true;
 
-  // CONFIGURAÇÕES DO EFEITO
-  var limiteParticulas = 650;       // Antes: 180
-  var intervaloMinimo = 2;          // Antes: 5
-  var particulasPorMovimento = 8;    // Antes: 3
+  // ================================================
+  // CONFIGURAÇÕES — INTENSIDADE DO EFEITO
+  // ================================================
+
+  var limiteParticulas = 1000;
+  var particulasPorMovimento = 12;
+  var intervaloMinimo = 1;
+
+  // Aumente para uma cauda mais comprida
+  var comprimentoRastro = 65;
+
+  // Aumente para uma cauda mais larga
+  var larguraRastro = 30;
+
+  // Intensidade do brilho dourado
+  var intensidadeBrilho = 32;
+
+  // Duração das partículas
+  var decaimentoMinimo = 0.002;
+  var decaimentoMaximo = 0.005;
+
   var ultimaParticula = 0;
   var particulas = [];
+  var caminhoMouse = [];
+
   var larguraTela = window.innerWidth;
   var alturaTela = window.innerHeight;
 
@@ -66,56 +85,69 @@
     contexto.setTransform(escala, 0, 0, escala, 0, 0);
   }
 
-  function numeroAleatorio(min, max) {
+  function aleatorio(min, max) {
     return Math.random() * (max - min) + min;
   }
+
+  // ================================================
+  // CRIAÇÃO DAS PARTÍCULAS
+  // ================================================
 
   function criarParticula(x, y) {
     if (particulas.length >= limiteParticulas) return;
 
     var sorteio = Math.random();
 
-    // Mais estrelas grandes e pontos cintilantes
-    var tipo = sorteio < 0.68
+    var tipo = sorteio < 0.62
       ? 'estrela'
-      : sorteio < 0.90
+      : sorteio < 0.91
         ? 'ponto'
         : 'brilho';
 
-    particulas.push({
-      x: x + numeroAleatorio(-22, 22),
-      y: y + numeroAleatorio(-22, 22),
+    // Dispersão lateral para alargar a cauda
+    var dispersao = larguraRastro * 0.65;
 
-      vx: numeroAleatorio(-1.8, 1.8),
-      vy: numeroAleatorio(-2.0, 0.8),
+    particulas.push({
+      x: x + aleatorio(-dispersao, dispersao),
+      y: y + aleatorio(-dispersao, dispersao),
+
+      vx: aleatorio(-1.5, 1.5),
+      vy: aleatorio(-1.8, 0.8),
 
       tamanho: tipo === 'estrela'
-        ? numeroAleatorio(7, 17)
+        ? aleatorio(5, 15)
         : tipo === 'ponto'
-          ? numeroAleatorio(1.5, 4.5)
-          : numeroAleatorio(4, 9),
+          ? aleatorio(1, 3.5)
+          : aleatorio(3, 8),
 
       tipo: tipo,
       vida: 1,
 
-      // Maior duração para alongar o rastro
-      decaimento: numeroAleatorio(0.0025, 0.006),
+      decaimento: aleatorio(
+        decaimentoMinimo,
+        decaimentoMaximo
+      ),
 
-      rotacao: numeroAleatorio(0, Math.PI),
-      giro: numeroAleatorio(-0.035, 0.035),
-      fase: numeroAleatorio(0, Math.PI * 2)
+      rotacao: aleatorio(0, Math.PI * 2),
+      giro: aleatorio(-0.035, 0.035),
+      fase: aleatorio(0, Math.PI * 2)
     });
   }
 
+  // ================================================
+  // DESENHO DAS ESTRELAS
+  // ================================================
+
   function desenharEstrela(x, y, raio, rotacao) {
     contexto.save();
+
     contexto.translate(x, y);
     contexto.rotate(rotacao);
     contexto.beginPath();
 
     for (var i = 0; i < 8; i++) {
       var angulo = i * Math.PI / 4 - Math.PI / 2;
-      var r = i % 2 === 0 ? raio : raio * 0.28;
+      var r = i % 2 === 0 ? raio : raio * 0.25;
 
       var px = Math.cos(angulo) * r;
       var py = Math.sin(angulo) * r;
@@ -136,18 +168,27 @@
     contexto.save();
 
     contexto.globalAlpha = Math.max(0, p.vida);
-
-    // Dourado mais luminoso
-    contexto.fillStyle = '#FFF2A6';
-    contexto.shadowColor = '#FFB800';
-    contexto.shadowBlur = 22;
+    contexto.fillStyle = '#FFF4B0';
+    contexto.shadowColor = '#FFB900';
+    contexto.shadowBlur = intensidadeBrilho;
 
     if (p.tipo === 'estrela') {
-      desenharEstrela(p.x, p.y, p.tamanho, p.rotacao);
+      desenharEstrela(
+        p.x,
+        p.y,
+        p.tamanho,
+        p.rotacao
+      );
 
     } else if (p.tipo === 'ponto') {
       contexto.beginPath();
-      contexto.arc(p.x, p.y, p.tamanho, 0, Math.PI * 2);
+      contexto.arc(
+        p.x,
+        p.y,
+        p.tamanho,
+        0,
+        Math.PI * 2
+      );
       contexto.fill();
 
     } else {
@@ -174,12 +215,83 @@
     contexto.restore();
   }
 
+  // ================================================
+  // CAUDA LUMINOSA CONTÍNUA
+  // ================================================
+
+  function desenharCauda() {
+    if (caminhoMouse.length < 2) return;
+
+    contexto.save();
+
+    // A cauda começa fina e se alarga perto do cursor
+    for (var i = 1; i < caminhoMouse.length; i++) {
+      var anterior = caminhoMouse[i - 1];
+      var atual = caminhoMouse[i];
+
+      var progresso = i / (caminhoMouse.length - 1);
+
+      var largura =
+        Math.max(0.5, larguraRastro * progresso);
+
+      var opacidade = 0.08 + progresso * 0.55;
+
+      // Halo exterior dourado
+      contexto.beginPath();
+      contexto.moveTo(anterior.x, anterior.y);
+      contexto.lineTo(atual.x, atual.y);
+
+      contexto.lineWidth = largura * 2;
+      contexto.lineCap = 'round';
+      contexto.lineJoin = 'round';
+      contexto.strokeStyle =
+        'rgba(255, 174, 0, ' + (opacidade * 0.35) + ')';
+
+      contexto.shadowColor = '#FFB900';
+      contexto.shadowBlur = intensidadeBrilho;
+
+      contexto.stroke();
+
+      // Faixa principal de luz
+      contexto.beginPath();
+      contexto.moveTo(anterior.x, anterior.y);
+      contexto.lineTo(atual.x, atual.y);
+
+      contexto.lineWidth = largura;
+      contexto.strokeStyle =
+        'rgba(255, 205, 65, ' + opacidade + ')';
+
+      contexto.shadowBlur = intensidadeBrilho * 0.65;
+      contexto.stroke();
+
+      // Núcleo fino e claro
+      contexto.beginPath();
+      contexto.moveTo(anterior.x, anterior.y);
+      contexto.lineTo(atual.x, atual.y);
+
+      contexto.lineWidth = Math.max(0.6, largura * 0.16);
+      contexto.strokeStyle =
+        'rgba(255, 255, 215, ' + (opacidade * 0.9) + ')';
+
+      contexto.shadowBlur = intensidadeBrilho * 0.4;
+      contexto.stroke();
+    }
+
+    contexto.restore();
+  }
+
+  // ================================================
+  // ANIMAÇÃO
+  // ================================================
+
   var quadroPendente = false;
 
   function animar(tempo) {
     quadroPendente = false;
 
     contexto.clearRect(0, 0, larguraTela, alturaTela);
+
+    desenharCauda();
 
     for (var i = particulas.length - 1; i >= 0; i--) {
       var p = particulas[i];
@@ -199,7 +311,16 @@
       desenharParticula(p, tempo);
     }
 
-    if (particulas.length > 0) {
+    // Encurta a cauda gradualmente, preservando os trechos recentes
+    for (var j = caminhoMouse.length - 1; j >= 0; j--) {
+      caminhoMouse[j].vida -= 0.012;
+
+      if (caminhoMouse[j].vida <= 0) {
+        caminhoMouse.splice(j, 1);
+      }
+    }
+
+    if (particulas.length > 0 || caminhoMouse.length > 1) {
       solicitarQuadro();
     }
   }
@@ -211,21 +332,40 @@
     }
   }
 
+  // ================================================
+  // MOVIMENTO DO MOUSE
+  // ================================================
+
   function aoMoverMouse(evento) {
     if (movimentoReduzido || document.hidden) return;
 
     var agora = performance.now();
 
-    if (agora - ultimaParticula < intervaloMinimo) return;
+    // Registra a trajetória do cursor
+    caminhoMouse.push({
+      x: evento.clientX,
+      y: evento.clientY,
+      vida: 1
+    });
 
-    ultimaParticula = agora;
+    while (caminhoMouse.length > comprimentoRastro) {
+      caminhoMouse.shift();
+    }
 
-    for (var i = 0; i < particulasPorMovimento; i++) {
-      criarParticula(evento.clientX, evento.clientY);
+    if (agora - ultimaParticula >= intervaloMinimo) {
+      ultimaParticula = agora;
+
+      for (var i = 0; i < particulasPorMovimento; i++) {
+        criarParticula(evento.clientX, evento.clientY);
+      }
     }
 
     solicitarQuadro();
   }
+
+  // ================================================
+  // INICIALIZAÇÃO
+  // ================================================
 
   function iniciar() {
     if (!document.body || camada.isConnected) return;
@@ -245,7 +385,14 @@
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) {
         particulas.length = 0;
-        contexto.clearRect(0, 0, larguraTela, alturaTela);
+        caminhoMouse.length = 0;
+
+        contexto.clearRect(
+          0,
+          0,
+          larguraTela,
+          alturaTela
+        );
       }
     });
   }
