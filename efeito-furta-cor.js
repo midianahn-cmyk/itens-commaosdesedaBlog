@@ -12,7 +12,7 @@
       transition: filter 0.4s ease;
     }
 
-    .post-body img.efeito-arco-iris-gradual:hover {
+    .abovepost img.efeito-arco-iris-gradual:hover {
       filter: hue-rotate(120deg) saturate(1.8);
     }
   `;
