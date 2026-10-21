@@ -1,25 +1,26 @@
-```html
-<!-- =====================================================
-     RASTRO DE ESTRELAS E BRILHOS — DOURADO MÁGICO
-     Criado por: Com Mãos de Seda
-     Site: https://www.commaosdesedaoficial.com
-     © 2026 Com Mãos de Seda
-===================================================== -->
 
-<script>
-//<![CDATA[
+/* =====================================================
+   RASTRO DE ESTRELAS E BRILHOS — DOURADO MÁGICO
+   Criado por: Com Mãos de Seda
+   Site: https://www.commaosdesedaoficial.com
+   © 2026 Com Mãos de Seda
+   ===================================================== */
+
 (function () {
   'use strict';
 
   // Impede a instalação duplicada
   if (window.cmsRastroDouradoAtivo) return;
-  window.cmsRastroDouradoAtivo = true;
 
   // Não executar em dispositivos sem mouse
-  if (window.matchMedia &&
-      window.matchMedia('(hover: none)').matches) {
+  if (
+    window.matchMedia &&
+    window.matchMedia('(hover: none)').matches
+  ) {
     return;
   }
+
+  window.cmsRastroDouradoAtivo = true;
 
   var limiteParticulas = 34;
   var intervaloMinimo = 24;
@@ -27,13 +28,14 @@
   var particulas = [];
   var larguraTela = window.innerWidth;
   var alturaTela = window.innerHeight;
-  var movimentoReduzido = window.matchMedia &&
+
+  var movimentoReduzido =
+    window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Camada independente: não ocupa espaço no layout
+  // Camada independente, sem ocupar espaço no layout
   var camada = document.createElement('canvas');
   camada.id = 'cms-rastro-estrelas-douradas';
-
   camada.setAttribute('aria-hidden', 'true');
 
   camada.style.cssText = [
@@ -48,7 +50,10 @@
 
   var contexto = camada.getContext('2d');
 
-  if (!contexto) return;
+  if (!contexto) {
+    window.cmsRastroDouradoAtivo = false;
+    return;
+  }
 
   function ajustarTela() {
     larguraTela = window.innerWidth;
@@ -72,6 +77,7 @@
     }
 
     var sorteio = Math.random();
+
     var tipo = sorteio < 0.45
       ? 'estrela'
       : sorteio < 0.78
@@ -83,9 +89,11 @@
       y: y + numeroAleatorio(-7, 7),
       vx: numeroAleatorio(-0.65, 0.65),
       vy: numeroAleatorio(-1.1, 0.25),
+
       tamanho: tipo === 'estrela'
         ? numeroAleatorio(3, 6)
         : numeroAleatorio(1, 2.7),
+
       tipo: tipo,
       vida: 1,
       decaimento: numeroAleatorio(0.018, 0.032),
@@ -121,6 +129,7 @@
 
   function desenharParticula(p, tempo) {
     contexto.save();
+
     contexto.globalAlpha = Math.max(0, p.vida);
     contexto.fillStyle = '#FFD76A';
     contexto.shadowColor = '#FFCF4D';
@@ -128,17 +137,30 @@
 
     if (p.tipo === 'estrela') {
       desenharEstrela(p.x, p.y, p.tamanho, p.rotacao);
+
     } else if (p.tipo === 'ponto') {
       contexto.beginPath();
       contexto.arc(p.x, p.y, p.tamanho, 0, Math.PI * 2);
       contexto.fill();
+
     } else {
       // Brilho em forma de cruz luminosa
       var pulso = 0.7 + Math.sin(tempo / 130 + p.fase) * 0.3;
       var r = p.tamanho * pulso;
 
-      contexto.fillRect(p.x - r * 0.25, p.y - r * 2, r * 0.5, r * 4);
-      contexto.fillRect(p.x - r * 2, p.y - r * 0.25, r * 4, r * 0.5);
+      contexto.fillRect(
+        p.x - r * 0.25,
+        p.y - r * 2,
+        r * 0.5,
+        r * 4
+      );
+
+      contexto.fillRect(
+        p.x - r * 2,
+        p.y - r * 0.25,
+        r * 4,
+        r * 0.5
+      );
     }
 
     contexto.restore();
@@ -181,7 +203,7 @@
   }
 
   function aoMoverMouse(evento) {
-    if (movimentoReduzido) return;
+    if (movimentoReduzido || document.hidden) return;
 
     var agora = performance.now();
 
@@ -203,6 +225,7 @@
     if (!document.body || camada.isConnected) return;
 
     document.body.appendChild(camada);
+
     ajustarTela();
 
     document.addEventListener('mousemove', aoMoverMouse, {
@@ -230,6 +253,3 @@
     iniciar();
   }
 })();
-//]]>
-</script>
-```
