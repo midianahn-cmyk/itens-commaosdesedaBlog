@@ -24,7 +24,7 @@
   // CONFIGURAÇÕES — INTENSIDADE DO EFEITO
   // ================================================
 
-  var limiteParticulas = 100;
+  var limiteParticulas = 300;
   var particulasPorMovimento = 12;
   var intervaloMinimo = 1;
 
