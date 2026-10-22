@@ -158,14 +158,14 @@
     { cor: '#ff713d', claro: '#ffc0a5', escuro: '#d33d20' }
   ];
 
-  var ultimoX = 0;
-  var ultimoY = 0;
-  var ultimoBalao = 0;
-  var quantidade = 0;
+var ultimoX = null;
+var ultimoY = null;
+var ultimoBalao = 0;
+var quantidade = 0;
 
-  var MAX_BALOES = 38;
-  var INTERVALO = 58;
-  var DISTANCIA = 17;
+var MAX_BALOES = 60;
+var INTERVALO = 25;
+var DISTANCIA = 7;
 
   function aleatorio(min, max) {
     return Math.random() * (max - min) + min;
