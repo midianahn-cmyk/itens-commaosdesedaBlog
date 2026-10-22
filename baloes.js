@@ -23,13 +23,15 @@
 
   estilo.id = ID_STYLE;
   estilo.textContent = `
+    /* CURSOR PRINCIPAL: PEQUENO BALÃO ROSA */
     @media (pointer: fine) {
       html, body, a, button, input, textarea, select,
       label, [role="button"], summary {
-        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='38' height='46' viewBox='0 0 38 46'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23ff9acb'/%3E%3Cstop offset='.48' stop-color='%23ff267d'/%3E%3Cstop offset='1' stop-color='%23bd0751'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M4 3 Q3 2 3 7 L4 34 Q4 39 8 35 L14 28 L21 40 Q23 44 26 41 L30 39 Q32 38 30 34 L23 22 L32 20 Q37 19 32 16 Z' fill='url(%23g)' stroke='%23ffffff' stroke-width='2.5' stroke-linejoin='round'/%3E%3Cpath d='M8 8 L9 23' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' opacity='.9'/%3E%3C/svg%3E") 4 3, auto;
+        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='34' viewBox='0 0 26 34'%3E%3Cdefs%3E%3ClinearGradient id='b' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23ffb6d7'/%3E%3Cstop offset='.45' stop-color='%23ff438e'/%3E%3Cstop offset='1' stop-color='%23c90050'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cellipse cx='12' cy='10' rx='8.5' ry='10' fill='url(%23b)' stroke='%23ffffff' stroke-width='1'/%3E%3Cellipse cx='8.5' cy='5.5' rx='2' ry='3.5' fill='%23ffffff' opacity='.9'/%3E%3Cpath d='M10 19 L12 22 L14 19 Z' fill='%23c90050'/%3E%3Cpath d='M12 22 Q17 26 12 32' fill='none' stroke='%23777777' stroke-width='.8'/%3E%3C/svg%3E") 12 10, auto;
       }
     }
 
+    /* CAMADA ISOLADA DO EFEITO */
     #cmsl-rastro-baloes-camada {
       position: fixed !important;
       inset: 0 !important;
@@ -42,6 +44,7 @@
       isolation: isolate !important;
     }
 
+    /* FORMATO DOS BALÕES DO RASTRO */
     #cmsl-rastro-baloes-camada .cmsl-balao {
       position: absolute !important;
       display: block !important;
@@ -52,7 +55,7 @@
       margin: 0 !important;
       padding: 0 !important;
       border: 1px solid rgba(255,255,255,.75) !important;
-      border-radius: 52% 48% 48% 52% / 43% 43% 57% 57% !important;
+      border-radius: 50% 50% 46% 46% / 43% 43% 57% 57% !important;
 
       background:
         radial-gradient(ellipse at 29% 20%,
@@ -71,6 +74,7 @@
         0 2px 5px rgba(0,0,0,.12) !important;
 
       opacity: 0 !important;
+
       transform: translate3d(0,0,0)
         rotate(var(--cmsl-rotacao, 0deg)) scale(.7) !important;
 
@@ -80,6 +84,7 @@
       will-change: transform, opacity !important;
     }
 
+    /* NÓ DO BALÃO */
     #cmsl-rastro-baloes-camada .cmsl-balao::before {
       content: "" !important;
       position: absolute !important;
@@ -93,6 +98,7 @@
       border-top: 5px solid var(--cmsl-cor) !important;
     }
 
+    /* CORDINHA DO BALÃO */
     #cmsl-rastro-baloes-camada .cmsl-balao::after {
       content: "" !important;
       position: absolute !important;
@@ -108,6 +114,7 @@
       transform: translateX(-50%) !important;
     }
 
+    /* SUBIDA E DESAPARECIMENTO */
     @keyframes cmsl-balao-subir {
       0% {
         opacity: 0;
@@ -141,6 +148,7 @@
   camada.setAttribute('role', 'presentation');
   document.body.appendChild(camada);
 
+  /* CORES DOS BALÕES */
   var cores = [
     { cor: '#ff4f91', claro: '#ffb3d0', escuro: '#c9185b' },
     { cor: '#398cff', claro: '#a9d7ff', escuro: '#1450b8' },
@@ -214,6 +222,7 @@
       if (balao.parentNode) {
         balao.parentNode.removeChild(balao);
       }
+
       quantidade = Math.max(0, quantidade - 1);
     }, { once: true });
   }
