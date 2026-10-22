@@ -32,7 +32,7 @@
   var comprimentoRastro = 65;
 
   // Aumente para uma cauda mais larga
-  var larguraRastro = 30;
+  var larguraRastro = 100;
 
   // Intensidade do brilho dourado
   var intensidadeBrilho = 32;
