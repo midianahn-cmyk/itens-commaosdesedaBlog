@@ -1,7 +1,7 @@
 # itens-commaosdesedaBlog
 
 Catalogo slide
-<script src="https://cdn.jsdelivr.net/gh/midianahn-cmyk/itens-commaosdesedaBlog@main/catalogo-intalador.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/midianahn-cmyk/itens-commaosdesedaBlog@main/Instalador-catalogo.js"></script>
 Grandes marcas
 <script src="https://cdn.jsdelivr.net/gh/midianahn-cmyk/itens-commaosdesedaBlog@main/grandesmarcas.js"></script>
 Rastro dde brilho no cursor
