@@ -26,11 +26,10 @@
   // CONFIGURAÇÕES DO RASTRO
   // ================================================
 
-  var floresMaximo = 45;
+  var floresMaximo = 30;
   var floresPorMovimento = 1;
-  var floresIntervalo = 22;
-  var floresDuracao = 0.018;
-  var floresBrilho = 2;
+  var floresIntervalo = 35;
+  var floresDuracao = 0.025;
 
   var floresParticulas = [];
   var floresUltimoMovimento = 0;
@@ -44,12 +43,13 @@
 
   // Cores das flores
   var floresCores = [
-    '#F7B7C8',
-    '#FFD6E0',
-    '#E8B9E8',
-    '#FFF0C2',
-    '#FFFFFF',
-    '#E8C98A'
+    '#F49AB8', // Rosa
+    '#FFC0D4', // Rosa-claro
+    '#DDA5E8', // Lilás
+    '#FFF0C2', // Creme
+    '#FFFFFF', // Branco
+    '#E8C98A', // Champanhe
+    '#F6B8A8'  // Pêssego
   ];
 
   // ================================================
@@ -111,10 +111,15 @@
       0,
       0
     );
+
+    // Garante que não haja sombras ou brilho
+    floresCtx.shadowBlur = 0;
+    floresCtx.shadowColor = 'transparent';
   }
 
   // ================================================
   // DESENHO DE UMA FLOR DE CINCO PÉTALAS
+  // SEM BRILHO OU LUMINOSIDADE
   // ================================================
 
   function floresDesenharFlor(
@@ -126,13 +131,15 @@
   ) {
     floresCtx.save();
 
+    // Elimina qualquer sombra
+    floresCtx.shadowBlur = 0;
+    floresCtx.shadowColor = 'transparent';
+
     floresCtx.translate(x, y);
     floresCtx.rotate(rotacao);
 
-    // Pétalas arredondadas
+    // Pétalas coloridas e bem definidas
     floresCtx.fillStyle = cor;
-    floresCtx.shadowColor = cor;
-    floresCtx.shadowBlur = floresBrilho;
 
     for (var i = 0; i < 5; i++) {
       floresCtx.save();
@@ -145,9 +152,9 @@
 
       floresCtx.ellipse(
         0,
-        -tamanho * 0.48,
-        tamanho * 0.42,
-        tamanho * 0.60,
+        -tamanho * 0.43,
+        tamanho * 0.34,
+        tamanho * 0.49,
         0,
         0,
         Math.PI * 2
@@ -158,19 +165,18 @@
       floresCtx.restore();
     }
 
-    // Miolo redondo dourado
-    floresCtx.shadowBlur = 0;
+    // Miolo dourado sólido
     floresCtx.beginPath();
 
     floresCtx.arc(
       0,
       0,
-      tamanho * 0.23,
+      tamanho * 0.22,
       0,
       Math.PI * 2
     );
 
-    floresCtx.fillStyle = '#E5B94F';
+    floresCtx.fillStyle = '#D9A52E';
     floresCtx.fill();
 
     floresCtx.restore();
@@ -192,22 +198,26 @@
     ];
 
     floresParticulas.push({
-      x: x + (Math.random() - 0.5) * 12,
-      y: y + (Math.random() - 0.5) * 12,
+      x: x + (Math.random() - 0.5) * 10,
+      y: y + (Math.random() - 0.5) * 10,
 
-      tamanho: 4 + Math.random() * 3,
+      // Flores entre 9 e 15 pixels
+      tamanho: 9 + Math.random() * 6,
 
       cor: floresCor,
 
       rotacao: Math.random() * Math.PI * 2,
 
-      giro: (Math.random() - 0.5) * 0.025,
+      giro: (Math.random() - 0.5) * 0.035,
 
-      vx: (Math.random() - 0.5) * 0.45,
+      // Movimento suave das flores
+      vx: (Math.random() - 0.5) * 0.6,
+      vy: -0.2 - Math.random() * 0.4,
 
-      vy: -0.15 - Math.random() * 0.35,
+      vida: 1,
 
-      vida: 1
+      decaimento: floresDuracao *
+        (0.75 + Math.random() * 0.5)
     });
   }
 
@@ -235,7 +245,7 @@
       flor.x += flor.vx;
       flor.y += flor.vy;
       flor.rotacao += flor.giro;
-      flor.vida -= floresDuracao;
+      flor.vida -= flor.decaimento;
 
       if (flor.vida <= 0) {
         floresParticulas.splice(i, 1);
@@ -244,7 +254,11 @@
 
       floresCtx.save();
 
-      floresCtx.globalAlpha = flor.vida;
+      // Desaparecimento gradual, sem brilho
+      floresCtx.globalAlpha = Math.min(
+        1,
+        flor.vida
+      );
 
       floresDesenharFlor(
         flor.x,
