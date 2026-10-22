@@ -1,332 +1,265 @@
 
 /* =====================================================
-   RASTRO DE FLORES DE CEREJEIRA
-   Criado por: Com Mãos de Seda
+   RASTRO DE FLORES DE CEREJEIRA — COM MÃOS DE SEDA
+   Criadora: Com Mãos de Seda
    Site: https://www.commaosdesedaoficial.com
    © 2026 Com Mãos de Seda
+
+   EFEITO:
+   • Flores de cerejeira cor-de-rosa
+   • Pétalas soltas acompanhando o movimento do mouse
+   • Rastro suave e contínuo
+   • Sem estrelas douradas
+   • Fundo transparente
    ===================================================== */
 
 (function () {
-  'use strict';
+  "use strict";
 
+  // Evita iniciar o efeito duas vezes.
   if (window.cmsRastroCerejeirasAtivo) return;
 
-  if (
-    window.matchMedia &&
-    window.matchMedia('(hover: none)').matches
-  ) {
-    return;
-  }
+  // Não executa em dispositivos sem mouse.
+  if (window.matchMedia("(hover: none)").matches) return;
 
   window.cmsRastroCerejeirasAtivo = true;
 
-  // CONFIGURAÇÕES
-  var MAX_FLORES = 45;
-  var INTERVALO = 28;
-  var TAMANHO_MIN = 8;
-  var TAMANHO_MAX = 17;
-  var DURACAO = 1500;
+  const ID_CANVAS = "cms-rastro-cerejeiras";
 
-  var flores = [];
-  var ultimoTempo = 0;
-  var quadroAtivo = false;
-  var mouseX = null;
-  var mouseY = null;
+  // Remove somente uma tela antiga deste mesmo efeito.
+  const canvasAntigo = document.getElementById(ID_CANVAS);
+  if (canvasAntigo) canvasAntigo.remove();
 
-  var coresFlores = [
-    '#FFDCE8',
-    '#FFC0D5',
-    '#F8A9C5',
-    '#FFFFFF',
-    '#FCE8EF',
-    '#F4B6CE'
-  ];
+  const canvas = document.createElement("canvas");
+  canvas.id = ID_CANVAS;
 
-  // CAMADA DO EFEITO
-  var tela = document.createElement('canvas');
-  tela.id = 'cms-rastro-cerejeiras';
+  Object.assign(canvas.style, {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100%",
+    pointerEvents: "none",
+    zIndex: "2147483646"
+  });
 
-  tela.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(canvas);
 
-  tela.style.cssText =
-    'position:fixed;' +
-    'inset:0;' +
-    'width:100%;' +
-    'height:100%;' +
-    'pointer-events:none;' +
-    'z-index:2147483647;' +
-    'display:block;';
-
-  var ctx = tela.getContext('2d');
+  const ctx = canvas.getContext("2d");
 
   if (!ctx) {
+    canvas.remove();
     window.cmsRastroCerejeirasAtivo = false;
     return;
   }
 
-  var largura = window.innerWidth;
-  var altura = window.innerHeight;
+  let largura = 0;
+  let altura = 0;
+  let escala = 1;
 
-  function ajustarTela() {
+  const flores = [];
+  const petalas = [];
+
+  const MAX_FLORES = 65;
+  const MAX_PETALAS = 100;
+
+  let ultimoX = null;
+  let ultimoY = null;
+  let ultimoTempo = 0;
+
+  function ajustarCanvas() {
+    escala = Math.min(window.devicePixelRatio || 1, 2);
+
     largura = window.innerWidth;
     altura = window.innerHeight;
 
-    var escala = Math.min(
-      window.devicePixelRatio || 1,
-      2
-    );
-
-    tela.width = Math.round(largura * escala);
-    tela.height = Math.round(altura * escala);
+    canvas.width = Math.round(largura * escala);
+    canvas.height = Math.round(altura * escala);
 
     ctx.setTransform(escala, 0, 0, escala, 0, 0);
   }
 
-  // DESENHO DA FLOR DE CEREJEIRA
+  window.addEventListener("resize", ajustarCanvas);
+  ajustarCanvas();
+
+  // Desenha uma flor com cinco pétalas.
   function desenharFlor(flor) {
     ctx.save();
 
     ctx.translate(flor.x, flor.y);
     ctx.rotate(flor.rotacao);
-
-    // Nenhum brilho ou sombra
-    ctx.shadowBlur = 0;
+    ctx.scale(flor.tamanho / 10, flor.tamanho / 10);
     ctx.globalAlpha = flor.opacidade;
 
-    // Cinco pétalas arredondadas
-    for (var i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i++) {
       ctx.save();
-
-      ctx.rotate(i * Math.PI * 2 / 5);
+      ctx.rotate((Math.PI * 2 * i) / 5);
 
       ctx.beginPath();
+      ctx.ellipse(0, -5, 3.2, 5.2, 0, 0, Math.PI * 2);
 
-      ctx.ellipse(
-        0,
-        -flor.tamanho * 0.34,
-        flor.tamanho * 0.25,
-        flor.tamanho * 0.40,
-        0,
-        0,
-        Math.PI * 2
-      );
+      const gradiente = ctx.createLinearGradient(0, -10, 0, 0);
+      gradiente.addColorStop(0, "#fff4fa");
+      gradiente.addColorStop(0.45, "#ffb7d5");
+      gradiente.addColorStop(1, "#f47eaf");
 
-      ctx.fillStyle = flor.cor;
+      ctx.fillStyle = gradiente;
       ctx.fill();
 
-      // Contorno sutil para definir as pétalas
-      ctx.strokeStyle = '#E9A0BB';
+      ctx.strokeStyle = "rgba(220, 83, 143, 0.30)";
       ctx.lineWidth = 0.45;
       ctx.stroke();
 
       ctx.restore();
     }
 
-    // Centro natural da flor
+    // Miolo delicado da flor.
     ctx.beginPath();
-
-    ctx.arc(
-      0,
-      0,
-      flor.tamanho * 0.10,
-      0,
-      Math.PI * 2
-    );
-
-    ctx.fillStyle = '#D98A46';
+    ctx.arc(0, 0, 1.7, 0, Math.PI * 2);
+    ctx.fillStyle = "#d99537";
     ctx.fill();
-
-    // Pequenos estames desenhados, sem luminosidade
-    ctx.strokeStyle = '#C77A42';
-    ctx.lineWidth = 0.65;
-
-    for (var j = 0; j < 5; j++) {
-      var angulo = j * Math.PI * 2 / 5;
-
-      ctx.beginPath();
-      ctx.moveTo(
-        Math.cos(angulo) * flor.tamanho * 0.08,
-        Math.sin(angulo) * flor.tamanho * 0.08
-      );
-
-      ctx.lineTo(
-        Math.cos(angulo) * flor.tamanho * 0.18,
-        Math.sin(angulo) * flor.tamanho * 0.18
-      );
-
-      ctx.stroke();
-    }
 
     ctx.restore();
   }
 
-  // CRIA FLORES E PÉTALAS SOLTAS
-  function criarParticula(x, y) {
-    if (flores.length >= MAX_FLORES) {
-      flores.shift();
-    }
+  // Desenha uma pétala individual.
+  function desenharPetala(p) {
+    ctx.save();
 
-    var eFlor = Math.random() < 0.78;
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rotacao);
+    ctx.globalAlpha = Math.max(0, p.vida);
+
+    ctx.beginPath();
+    ctx.ellipse(0, 0, p.tamanho * 0.55, p.tamanho, 0, 0, Math.PI * 2);
+
+    ctx.fillStyle = p.cor;
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function criarFlor(x, y) {
+    if (flores.length >= MAX_FLORES) flores.shift();
 
     flores.push({
-      x: x + (Math.random() - 0.5) * 18,
-      y: y + (Math.random() - 0.5) * 18,
-
-      tipo: eFlor ? 'flor' : 'petala',
-
-      tamanho: eFlor
-        ? TAMANHO_MIN +
-          Math.random() * (TAMANHO_MAX - TAMANHO_MIN)
-        : 4 + Math.random() * 6,
-
-      cor: coresFlores[
-        Math.floor(Math.random() * coresFlores.length)
-      ],
-
+      x: x,
+      y: y,
+      tamanho: 5 + Math.random() * 10,
       rotacao: Math.random() * Math.PI * 2,
-
-      giro: (Math.random() - 0.5) * 0.035,
-
-      vx: (Math.random() - 0.5) * 0.8,
-      vy: -0.25 - Math.random() * 0.55,
-
-      inicio: performance.now(),
-
-      duracao: DURACAO *
-        (0.75 + Math.random() * 0.5),
-
-      opacidade: 1
+      opacidade: 0.65 + Math.random() * 0.35,
+      vida: 1,
+      velocidade: 0.15 + Math.random() * 0.35,
+      giro: (Math.random() - 0.5) * 0.025
     });
   }
 
-  // DESENHO DE UMA PÉTALA SOLTA
-  function desenharPetala(flor) {
-    ctx.save();
+  function criarPetala(x, y) {
+    if (petalas.length >= MAX_PETALAS) petalas.shift();
 
-    ctx.translate(flor.x, flor.y);
-    ctx.rotate(flor.rotacao);
+    const cores = [
+      "#ffc0da",
+      "#ff9fc7",
+      "#ffe0ed",
+      "#f58db8",
+      "#fff0f6"
+    ];
 
-    ctx.globalAlpha = flor.opacidade;
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = flor.cor;
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-      0,
-      0,
-      flor.tamanho * 0.45,
-      flor.tamanho,
-      0,
-      0,
-      Math.PI * 2
-    );
-
-    ctx.fill();
-
-    ctx.restore();
+    petalas.push({
+      x: x + (Math.random() - 0.5) * 22,
+      y: y + (Math.random() - 0.5) * 22,
+      tamanho: 2 + Math.random() * 4,
+      rotacao: Math.random() * Math.PI * 2,
+      velocidadeX: (Math.random() - 0.5) * 1.5,
+      velocidadeY: 0.4 + Math.random() * 1.4,
+      giro: (Math.random() - 0.5) * 0.08,
+      vida: 1,
+      desaparecimento: 0.006 + Math.random() * 0.012,
+      cor: cores[Math.floor(Math.random() * cores.length)]
+    });
   }
 
-  // ANIMAÇÃO
-  function animar(tempo) {
-    quadroAtivo = false;
+  // Cria o rastro ao mover o mouse.
+  window.addEventListener("mousemove", function (evento) {
+    const x = evento.clientX;
+    const y = evento.clientY;
+    const agora = performance.now();
 
-    ctx.clearRect(0, 0, largura, altura);
-
-    for (var i = flores.length - 1; i >= 0; i--) {
-      var flor = flores[i];
-
-      var decorrido = tempo - flor.inicio;
-      var progresso = decorrido / flor.duracao;
-
-      if (progresso >= 1) {
-        flores.splice(i, 1);
-        continue;
-      }
-
-      flor.x += flor.vx;
-      flor.y += flor.vy;
-      flor.rotacao += flor.giro;
-
-      // Desaparece suavemente, sem brilho
-      flor.opacidade = 1 - progresso;
-
-      if (flor.tipo === 'flor') {
-        desenharFlor(flor);
-      } else {
-        desenharPetala(flor);
-      }
+    if (ultimoX === null) {
+      ultimoX = x;
+      ultimoY = y;
+      criarFlor(x, y);
+      criarPetala(x, y);
+      return;
     }
 
-    if (flores.length > 0) {
-      solicitarAnimacao();
-    }
-  }
+    const distancia = Math.hypot(x - ultimoX, y - ultimoY);
 
-  function solicitarAnimacao() {
-    if (!quadroAtivo) {
-      quadroAtivo = true;
-      requestAnimationFrame(animar);
-    }
-  }
+    // Distribui as flores pelo caminho do mouse.
+    if (distancia > 5) {
+      const quantidade = Math.min(5, Math.floor(distancia / 7) + 1);
 
-  // MOVIMENTO DO CURSOR
-  function moverCursor(evento) {
-    if (document.hidden) return;
+      for (let i = 1; i <= quantidade; i++) {
+        const proporcao = i / quantidade;
+        const px = ultimoX + (x - ultimoX) * proporcao;
+        const py = ultimoY + (y - ultimoY) * proporcao;
 
-    mouseX = evento.clientX;
-    mouseY = evento.clientY;
+        criarFlor(
+          px + (Math.random() - 0.5) * 12,
+          py + (Math.random() - 0.5) * 12
+        );
 
-    var agora = performance.now();
-
-    if (agora - ultimoTempo < INTERVALO) return;
-
-    ultimoTempo = agora;
-
-    criarParticula(mouseX, mouseY);
-
-    solicitarAnimacao();
-  }
-
-  // INICIALIZAÇÃO
-  function iniciar() {
-    if (!document.body || tela.isConnected) return;
-
-    document.body.appendChild(tela);
-
-    ajustarTela();
-
-    document.addEventListener(
-      'mousemove',
-      moverCursor,
-      { passive: true }
-    );
-
-    window.addEventListener(
-      'resize',
-      ajustarTela,
-      { passive: true }
-    );
-
-    document.addEventListener(
-      'visibilitychange',
-      function () {
-        if (document.hidden) {
-          flores.length = 0;
-
-          ctx.clearRect(0, 0, largura, altura);
+        if (Math.random() < 0.8) {
+          criarPetala(px, py);
         }
       }
-    );
+
+      ultimoX = x;
+      ultimoY = y;
+      ultimoTempo = agora;
+    } else if (agora - ultimoTempo > 100) {
+      criarPetala(x, y);
+      ultimoTempo = agora;
+    }
+  });
+
+  function animar() {
+    ctx.clearRect(0, 0, largura, altura);
+
+    for (let i = flores.length - 1; i >= 0; i--) {
+      const flor = flores[i];
+
+      flor.y += flor.velocidade;
+      flor.rotacao += flor.giro;
+      flor.vida -= 0.003;
+      flor.opacidade = Math.min(flor.opacidade, flor.vida);
+
+      desenharFlor(flor);
+
+      if (flor.vida <= 0 || flor.y > altura + 30) {
+        flores.splice(i, 1);
+      }
+    }
+
+    for (let i = petalas.length - 1; i >= 0; i--) {
+      const p = petalas[i];
+
+      p.x += p.velocidadeX;
+      p.y += p.velocidadeY;
+      p.rotacao += p.giro;
+      p.velocidadeX += (Math.random() - 0.5) * 0.025;
+      p.vida -= p.desaparecimento;
+
+      desenharPetala(p);
+
+      if (p.vida <= 0 || p.y > altura + 30) {
+        petalas.splice(i, 1);
+      }
+    }
+
+    window.requestAnimationFrame(animar);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener(
-      'DOMContentLoaded',
-      iniciar,
-      { once: true }
-    );
-  } else {
-    iniciar();
-  }
+  animar();
+
 })();
