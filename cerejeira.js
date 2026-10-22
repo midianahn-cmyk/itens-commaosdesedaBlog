@@ -1,5 +1,6 @@
+
 /* =====================================================
-   RASTRO DE ESTRELAS E BRILHOS — FLORES
+   RASTRO DE FLORES DELICADAS
    Criado por: Com Mãos de Seda
    Site: https://www.commaosdesedaoficial.com
    © 2026 Com Mãos de Seda
@@ -13,43 +14,27 @@
   if (
     window.matchMedia &&
     window.matchMedia('(hover: none)').matches
-  ) {
-    return;
-  }
+  ) return;
 
   window.cmsRastroFloresAtivo = true;
 
-  // ================================================
-  // CONFIGURAÇÕES DO EFEITO FLORES
-  // ================================================
+  // CONFIGURAÇÕES DELICADAS
+  var floresMaximo = 45;
+  var floresPorMovimento = 1;
+  var floresIntervalo = 22;
+  var floresDuracao = 0.018;
+  var floresBrilho = 3;
 
-  var floresLimiteParticulas = 180;
-  var floresParticulasPorMovimento = 5;
-  var floresIntervaloMinimo = 8;
-
-  var floresComprimentoRastro = 35;
-  var floresLarguraRastro = 16;
-  var floresIntensidadeBrilho = 18;
-
-  var floresDecaimentoMinimo = 0.012;
-  var floresDecaimentoMaximo = 0.025;
-
-  var floresUltimaParticula = 0;
   var floresParticulas = [];
-  var floresCaminhoMouse = [];
+  var floresUltimoMovimento = 0;
+  var floresQuadro = false;
 
-  var floresLarguraTela = window.innerWidth;
-  var floresAlturaTela = window.innerHeight;
+  var floresTela = document.createElement('canvas');
+  floresTela.id = 'cms-rastro-flores-douradas';
 
-  var floresMovimentoReduzido =
-    window.matchMedia &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  floresTela.setAttribute('aria-hidden', 'true');
 
-  var floresCamada = document.createElement('canvas');
-  floresCamada.id = 'cms-rastro-flores-douradas';
-  floresCamada.setAttribute('aria-hidden', 'true');
-
-  floresCamada.style.cssText = [
+  floresTela.style.cssText = [
     'position:fixed',
     'inset:0',
     'width:100%',
@@ -59,452 +44,175 @@
     'display:block'
   ].join(';');
 
-  var floresContexto = floresCamada.getContext('2d');
+  var floresCtx = floresTela.getContext('2d');
 
-  if (!floresContexto) {
+  if (!floresCtx) {
     window.cmsRastroFloresAtivo = false;
     return;
   }
 
-  // ================================================
-  // AJUSTE DA TELA
-  // ================================================
+  var floresLargura = window.innerWidth;
+  var floresAltura = window.innerHeight;
+
+  var floresCores = [
+    '#F7B7C8',
+    '#FFD6E0',
+    '#E8B9E8',
+    '#FFF0C2',
+    '#FFFFFF',
+    '#E8C98A'
+  ];
 
   function floresAjustarTela() {
-    floresLarguraTela = window.innerWidth;
-    floresAlturaTela = window.innerHeight;
+    floresLargura = window.innerWidth;
+    floresAltura = window.innerHeight;
 
-    var floresEscala = Math.min(
+    var escala = Math.min(
       window.devicePixelRatio || 1,
       2
     );
 
-    floresCamada.width = Math.round(
-      floresLarguraTela * floresEscala
-    );
+    floresTela.width = Math.round(floresLargura * escala);
+    floresTela.height = Math.round(floresAltura * escala);
 
-    floresCamada.height = Math.round(
-      floresAlturaTela * floresEscala
-    );
-
-    floresContexto.setTransform(
-      floresEscala,
-      0,
-      0,
-      floresEscala,
-      0,
-      0
-    );
+    floresCtx.setTransform(escala, 0, 0, escala, 0, 0);
   }
 
-  function floresAleatorio(min, max) {
-    return Math.random() * (max - min) + min;
-  }
+  // DESENHA UMA FLOR DE CINCO PÉTALAS
+  function floresDesenharFlor(x, y, tamanho, cor, rotacao) {
+    floresCtx.save();
 
-  // ================================================
-  // CRIAÇÃO DAS PARTÍCULAS
-  // ================================================
+    floresCtx.translate(x, y);
+    floresCtx.rotate(rotacao);
 
-  function floresCriarParticula(x, y) {
-    if (
-      floresParticulas.length >= floresLimiteParticulas
-    ) {
-      return;
-    }
+    floresCtx.fillStyle = cor;
+    floresCtx.shadowColor = cor;
+    floresCtx.shadowBlur = floresBrilho;
 
-    var floresSorteio = Math.random();
+    for (var i = 0; i < 5; i++) {
+      floresCtx.save();
+      floresCtx.rotate(i * Math.PI * 2 / 5);
 
-    var floresTipo =
-      floresSorteio < 0.62
-        ? 'estrela'
-        : floresSorteio < 0.91
-          ? 'ponto'
-          : 'brilho';
-
-    var floresDispersao = floresLarguraRastro * 0.65;
-
-    floresParticulas.push({
-      x: x + floresAleatorio(
-        -floresDispersao,
-        floresDispersao
-      ),
-
-      y: y + floresAleatorio(
-        -floresDispersao,
-        floresDispersao
-      ),
-
-      vx: floresAleatorio(-1.2, 1.2),
-      vy: floresAleatorio(-1.5, 0.7),
-
-      tamanho:
-        floresTipo === 'estrela'
-          ? floresAleatorio(4, 11)
-          : floresTipo === 'ponto'
-            ? floresAleatorio(1, 2.8)
-            : floresAleatorio(3, 6),
-
-      tipo: floresTipo,
-      vida: 1,
-
-      decaimento: floresAleatorio(
-        floresDecaimentoMinimo,
-        floresDecaimentoMaximo
-      ),
-
-      rotacao: floresAleatorio(0, Math.PI * 2),
-      giro: floresAleatorio(-0.035, 0.035),
-      fase: floresAleatorio(0, Math.PI * 2)
-    });
-  }
-
-  // ================================================
-  // DESENHO DAS ESTRELAS
-  // ================================================
-
-  function floresDesenharEstrela(
-    x,
-    y,
-    raio,
-    rotacao
-  ) {
-    floresContexto.save();
-
-    floresContexto.translate(x, y);
-    floresContexto.rotate(rotacao);
-    floresContexto.beginPath();
-
-    for (var i = 0; i < 8; i++) {
-      var floresAngulo =
-        i * Math.PI / 4 - Math.PI / 2;
-
-      var floresRaio =
-        i % 2 === 0 ? raio : raio * 0.25;
-
-      var floresPx =
-        Math.cos(floresAngulo) * floresRaio;
-
-      var floresPy =
-        Math.sin(floresAngulo) * floresRaio;
-
-      if (i === 0) {
-        floresContexto.moveTo(
-          floresPx,
-          floresPy
-        );
-      } else {
-        floresContexto.lineTo(
-          floresPx,
-          floresPy
-        );
-      }
-    }
-
-    floresContexto.closePath();
-    floresContexto.fill();
-    floresContexto.restore();
-  }
-
-  // ================================================
-  // DESENHO DAS PARTÍCULAS
-  // ================================================
-
-  function floresDesenharParticula(p, tempo) {
-    floresContexto.save();
-
-    floresContexto.globalAlpha = Math.max(0, p.vida);
-    floresContexto.fillStyle = '#FFF4B0';
-    floresContexto.shadowColor = '#FFB900';
-    floresContexto.shadowBlur = floresIntensidadeBrilho;
-
-    if (p.tipo === 'estrela') {
-      floresDesenharEstrela(
-        p.x,
-        p.y,
-        p.tamanho,
-        p.rotacao
-      );
-
-    } else if (p.tipo === 'ponto') {
-      floresContexto.beginPath();
-
-      floresContexto.arc(
-        p.x,
-        p.y,
-        p.tamanho,
+      floresCtx.beginPath();
+      floresCtx.ellipse(
+        0,
+        -tamanho * 0.58,
+        tamanho * 0.34,
+        tamanho * 0.55,
+        0,
         0,
         Math.PI * 2
       );
 
-      floresContexto.fill();
-
-    } else {
-      var floresPulso =
-        0.65 +
-        Math.sin(tempo / 100 + p.fase) * 0.35;
-
-      var floresRaio = p.tamanho * floresPulso;
-
-      floresContexto.fillRect(
-        p.x - floresRaio * 0.25,
-        p.y - floresRaio * 2,
-        floresRaio * 0.5,
-        floresRaio * 4
-      );
-
-      floresContexto.fillRect(
-        p.x - floresRaio * 2,
-        p.y - floresRaio * 0.25,
-        floresRaio * 4,
-        floresRaio * 0.5
-      );
+      floresCtx.fill();
+      floresCtx.restore();
     }
 
-    floresContexto.restore();
+    // Miolo delicado
+    floresCtx.shadowBlur = 0;
+    floresCtx.fillStyle = '#D9AC61';
+    floresCtx.beginPath();
+    floresCtx.arc(0, 0, tamanho * 0.19, 0, Math.PI * 2);
+    floresCtx.fill();
+
+    floresCtx.restore();
   }
 
-  // ================================================
-  // CAUDA LUMINOSA
-  // ================================================
-
-  function floresDesenharCauda() {
-    if (floresCaminhoMouse.length < 2) return;
-
-    floresContexto.save();
-
-    for (
-      var i = 1;
-      i < floresCaminhoMouse.length;
-      i++
-    ) {
-      var floresAnterior = floresCaminhoMouse[i - 1];
-      var floresAtual = floresCaminhoMouse[i];
-
-      var floresProgresso =
-        i / (floresCaminhoMouse.length - 1);
-
-      var floresLargura = Math.max(
-        0.5,
-        floresLarguraRastro * floresProgresso
-      );
-
-      var floresOpacidade =
-        0.08 + floresProgresso * 0.55;
-
-      // Halo exterior
-      floresContexto.beginPath();
-
-      floresContexto.moveTo(
-        floresAnterior.x,
-        floresAnterior.y
-      );
-
-      floresContexto.lineTo(
-        floresAtual.x,
-        floresAtual.y
-      );
-
-      floresContexto.lineWidth = floresLargura * 2;
-      floresContexto.lineCap = 'round';
-      floresContexto.lineJoin = 'round';
-
-      floresContexto.strokeStyle =
-        'rgba(255, 174, 0, ' +
-        floresOpacidade * 0.35 +
-        ')';
-
-      floresContexto.shadowColor = '#FFB900';
-      floresContexto.shadowBlur =
-        floresIntensidadeBrilho;
-
-      floresContexto.stroke();
-
-      // Faixa principal
-      floresContexto.beginPath();
-
-      floresContexto.moveTo(
-        floresAnterior.x,
-        floresAnterior.y
-      );
-
-      floresContexto.lineTo(
-        floresAtual.x,
-        floresAtual.y
-      );
-
-      floresContexto.lineWidth = floresLargura;
-
-      floresContexto.strokeStyle =
-        'rgba(255, 205, 65, ' +
-        floresOpacidade +
-        ')';
-
-      floresContexto.shadowBlur =
-        floresIntensidadeBrilho * 0.65;
-
-      floresContexto.stroke();
-
-      // Núcleo claro
-      floresContexto.beginPath();
-
-      floresContexto.moveTo(
-        floresAnterior.x,
-        floresAnterior.y
-      );
-
-      floresContexto.lineTo(
-        floresAtual.x,
-        floresAtual.y
-      );
-
-      floresContexto.lineWidth = Math.max(
-        0.6,
-        floresLargura * 0.16
-      );
-
-      floresContexto.strokeStyle =
-        'rgba(255, 255, 215, ' +
-        floresOpacidade * 0.9 +
-        ')';
-
-      floresContexto.shadowBlur =
-        floresIntensidadeBrilho * 0.4;
-
-      floresContexto.stroke();
+  // CRIA AS FLORES
+  function floresCriar(x, y) {
+    if (floresParticulas.length >= floresMaximo) {
+      floresParticulas.shift();
     }
 
-    floresContexto.restore();
+    floresParticulas.push({
+      x: x + (Math.random() - 0.5) * 12,
+      y: y + (Math.random() - 0.5) * 12,
+      tamanho: 3 + Math.random() * 4,
+      cor: floresCores[
+        Math.floor(Math.random() * floresCores.length)
+      ],
+      rotacao: Math.random() * Math.PI * 2,
+      giro: (Math.random() - 0.5) * 0.025,
+      vx: (Math.random() - 0.5) * 0.45,
+      vy: -0.15 - Math.random() * 0.35,
+      vida: 1
+    });
   }
 
-  // ================================================
   // ANIMAÇÃO
-  // ================================================
+  function floresAnimar() {
+    floresQuadro = false;
 
-  var floresQuadroPendente = false;
+    floresCtx.clearRect(0, 0, floresLargura, floresAltura);
 
-  function floresAnimar(tempo) {
-    floresQuadroPendente = false;
+    for (var i = floresParticulas.length - 1; i >= 0; i--) {
+      var flor = floresParticulas[i];
 
-    floresContexto.clearRect(
-      0,
-      0,
-      floresLarguraTela,
-      floresAlturaTela
-    );
+      flor.x += flor.vx;
+      flor.y += flor.vy;
+      flor.rotacao += flor.giro;
+      flor.vida -= floresDuracao;
 
-    floresDesenharCauda();
-
-    for (
-      var i = floresParticulas.length - 1;
-      i >= 0;
-      i--
-    ) {
-      var p = floresParticulas[i];
-
-      p.x += p.vx;
-      p.y += p.vy;
-
-      p.vy -= 0.006;
-      p.rotacao += p.giro;
-      p.vida -= p.decaimento;
-
-      if (p.vida <= 0) {
+      if (flor.vida <= 0) {
         floresParticulas.splice(i, 1);
         continue;
       }
 
-      floresDesenharParticula(p, tempo);
+      floresCtx.save();
+      floresCtx.globalAlpha = flor.vida;
+
+      floresDesenharFlor(
+        flor.x,
+        flor.y,
+        flor.tamanho,
+        flor.cor,
+        flor.rotacao
+      );
+
+      floresCtx.restore();
     }
 
-    for (
-      var j = floresCaminhoMouse.length - 1;
-      j >= 0;
-      j--
-    ) {
-      floresCaminhoMouse[j].vida -= 0.012;
-
-      if (floresCaminhoMouse[j].vida <= 0) {
-        floresCaminhoMouse.splice(j, 1);
-      }
-    }
-
-    if (
-      floresParticulas.length > 0 ||
-      floresCaminhoMouse.length > 1
-    ) {
-      floresSolicitarQuadro();
+    if (floresParticulas.length > 0) {
+      floresSolicitarAnimacao();
     }
   }
 
-  function floresSolicitarQuadro() {
-    if (!floresQuadroPendente) {
-      floresQuadroPendente = true;
-
+  function floresSolicitarAnimacao() {
+    if (!floresQuadro) {
+      floresQuadro = true;
       requestAnimationFrame(floresAnimar);
     }
   }
 
-  // ================================================
-  // MOVIMENTO DO MOUSE
-  // ================================================
+  // SEGUE O CURSOR SEM UMA CAUDA GROSSA
+  function floresMoverMouse(evento) {
+    if (document.hidden) return;
 
-  function floresAoMoverMouse(evento) {
-    if (floresMovimentoReduzido || document.hidden) {
+    var agora = performance.now();
+
+    if (agora - floresUltimoMovimento < floresIntervalo) {
       return;
     }
 
-    var floresAgora = performance.now();
+    floresUltimoMovimento = agora;
 
-    floresCaminhoMouse.push({
-      x: evento.clientX,
-      y: evento.clientY,
-      vida: 1
-    });
-
-    while (
-      floresCaminhoMouse.length >
-      floresComprimentoRastro
-    ) {
-      floresCaminhoMouse.shift();
+    for (var i = 0; i < floresPorMovimento; i++) {
+      floresCriar(evento.clientX, evento.clientY);
     }
 
-    if (
-      floresAgora - floresUltimaParticula >=
-      floresIntervaloMinimo
-    ) {
-      floresUltimaParticula = floresAgora;
-
-      for (
-        var i = 0;
-        i < floresParticulasPorMovimento;
-        i++
-      ) {
-        floresCriarParticula(
-          evento.clientX,
-          evento.clientY
-        );
-      }
-    }
-
-    floresSolicitarQuadro();
+    floresSolicitarAnimacao();
   }
 
-  // ================================================
-  // INICIALIZAÇÃO
-  // ================================================
-
   function floresIniciar() {
-    if (!document.body || floresCamada.isConnected) {
-      return;
-    }
+    if (!document.body || floresTela.isConnected) return;
 
-    document.body.appendChild(floresCamada);
+    document.body.appendChild(floresTela);
 
     floresAjustarTela();
 
     document.addEventListener(
       'mousemove',
-      floresAoMoverMouse,
+      floresMoverMouse,
       { passive: true }
     );
 
@@ -514,22 +222,18 @@
       { passive: true }
     );
 
-    document.addEventListener(
-      'visibilitychange',
-      function () {
-        if (document.hidden) {
-          floresParticulas.length = 0;
-          floresCaminhoMouse.length = 0;
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) {
+        floresParticulas.length = 0;
 
-          floresContexto.clearRect(
-            0,
-            0,
-            floresLarguraTela,
-            floresAlturaTela
-          );
-        }
+        floresCtx.clearRect(
+          0,
+          0,
+          floresLargura,
+          floresAltura
+        );
       }
-    );
+    });
   }
 
   if (document.readyState === 'loading') {
