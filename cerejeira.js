@@ -9,7 +9,7 @@
    • Flores de cerejeira cor-de-rosa
    • Pétalas soltas acompanhando o movimento do mouse
    • Rastro suave e contínuo
-   • Sem estrelas douradas
+   • Sem estrelas douradas 
    • Fundo transparente
    ===================================================== */
 
