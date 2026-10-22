@@ -9,3 +9,5 @@ Rastro dde brilho no cursor
 
 Flor de Cerejeira Cursos
 <script src="https://cdn.jsdelivr.net/gh/midianahn-cmyk/itens-commaosdesedaBlog@main/CerejeiroCursor.js"></script>
+Contanto
+<script src="https://cdn.jsdelivr.net/gh/midianahn-cmyk/itens-commaosdesedaBlog@main/Contato.js"></script>
