@@ -9,27 +9,55 @@
 (function () {
   'use strict';
 
+  // Evita duplicar o efeito
   if (window.cmsRastroFloresAtivo) return;
 
+  // Não executa em dispositivos sem mouse
   if (
     window.matchMedia &&
     window.matchMedia('(hover: none)').matches
-  ) return;
+  ) {
+    return;
+  }
 
   window.cmsRastroFloresAtivo = true;
 
-  // CONFIGURAÇÕES DELICADAS
+  // ================================================
+  // CONFIGURAÇÕES DO RASTRO
+  // ================================================
+
   var floresMaximo = 45;
   var floresPorMovimento = 1;
   var floresIntervalo = 22;
   var floresDuracao = 0.018;
-  var floresBrilho = 3;
+  var floresBrilho = 2;
 
   var floresParticulas = [];
   var floresUltimoMovimento = 0;
   var floresQuadro = false;
 
+  var floresMovimentoReduzido =
+    window.matchMedia &&
+    window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+  // Cores das flores
+  var floresCores = [
+    '#F7B7C8',
+    '#FFD6E0',
+    '#E8B9E8',
+    '#FFF0C2',
+    '#FFFFFF',
+    '#E8C98A'
+  ];
+
+  // ================================================
+  // CRIAÇÃO DA CAMADA
+  // ================================================
+
   var floresTela = document.createElement('canvas');
+
   floresTela.id = 'cms-rastro-flores-douradas';
 
   floresTela.setAttribute('aria-hidden', 'true');
@@ -54,14 +82,9 @@
   var floresLargura = window.innerWidth;
   var floresAltura = window.innerHeight;
 
-  var floresCores = [
-    '#F7B7C8',
-    '#FFD6E0',
-    '#E8B9E8',
-    '#FFF0C2',
-    '#FFFFFF',
-    '#E8C98A'
-  ];
+  // ================================================
+  // AJUSTE DA TELA
+  // ================================================
 
   function floresAjustarTela() {
     floresLargura = window.innerWidth;
@@ -72,80 +95,141 @@
       2
     );
 
-    floresTela.width = Math.round(floresLargura * escala);
-    floresTela.height = Math.round(floresAltura * escala);
+    floresTela.width = Math.round(
+      floresLargura * escala
+    );
 
-    floresCtx.setTransform(escala, 0, 0, escala, 0, 0);
+    floresTela.height = Math.round(
+      floresAltura * escala
+    );
+
+    floresCtx.setTransform(
+      escala,
+      0,
+      0,
+      escala,
+      0,
+      0
+    );
   }
 
-  // DESENHA UMA FLOR DE CINCO PÉTALAS
-  function floresDesenharFlor(x, y, tamanho, cor, rotacao) {
+  // ================================================
+  // DESENHO DE UMA FLOR DE CINCO PÉTALAS
+  // ================================================
+
+  function floresDesenharFlor(
+    x,
+    y,
+    tamanho,
+    cor,
+    rotacao
+  ) {
     floresCtx.save();
 
     floresCtx.translate(x, y);
     floresCtx.rotate(rotacao);
 
+    // Pétalas arredondadas
     floresCtx.fillStyle = cor;
     floresCtx.shadowColor = cor;
     floresCtx.shadowBlur = floresBrilho;
 
     for (var i = 0; i < 5; i++) {
       floresCtx.save();
-      floresCtx.rotate(i * Math.PI * 2 / 5);
+
+      floresCtx.rotate(
+        i * (Math.PI * 2 / 5)
+      );
 
       floresCtx.beginPath();
+
       floresCtx.ellipse(
         0,
-        -tamanho * 0.58,
-        tamanho * 0.34,
-        tamanho * 0.55,
+        -tamanho * 0.48,
+        tamanho * 0.42,
+        tamanho * 0.60,
         0,
         0,
         Math.PI * 2
       );
 
       floresCtx.fill();
+
       floresCtx.restore();
     }
 
-    // Miolo delicado
+    // Miolo redondo dourado
     floresCtx.shadowBlur = 0;
-    floresCtx.fillStyle = '#D9AC61';
     floresCtx.beginPath();
-    floresCtx.arc(0, 0, tamanho * 0.19, 0, Math.PI * 2);
+
+    floresCtx.arc(
+      0,
+      0,
+      tamanho * 0.23,
+      0,
+      Math.PI * 2
+    );
+
+    floresCtx.fillStyle = '#E5B94F';
     floresCtx.fill();
 
     floresCtx.restore();
   }
 
-  // CRIA AS FLORES
+  // ================================================
+  // CRIAÇÃO DAS FLORES DO RASTRO
+  // ================================================
+
   function floresCriar(x, y) {
     if (floresParticulas.length >= floresMaximo) {
       floresParticulas.shift();
     }
 
+    var floresCor = floresCores[
+      Math.floor(
+        Math.random() * floresCores.length
+      )
+    ];
+
     floresParticulas.push({
       x: x + (Math.random() - 0.5) * 12,
       y: y + (Math.random() - 0.5) * 12,
-      tamanho: 3 + Math.random() * 4,
-      cor: floresCores[
-        Math.floor(Math.random() * floresCores.length)
-      ],
+
+      tamanho: 4 + Math.random() * 3,
+
+      cor: floresCor,
+
       rotacao: Math.random() * Math.PI * 2,
+
       giro: (Math.random() - 0.5) * 0.025,
+
       vx: (Math.random() - 0.5) * 0.45,
+
       vy: -0.15 - Math.random() * 0.35,
+
       vida: 1
     });
   }
 
-  // ANIMAÇÃO
+  // ================================================
+  // ANIMAÇÃO DAS FLORES
+  // ================================================
+
   function floresAnimar() {
     floresQuadro = false;
 
-    floresCtx.clearRect(0, 0, floresLargura, floresAltura);
+    floresCtx.clearRect(
+      0,
+      0,
+      floresLargura,
+      floresAltura
+    );
 
-    for (var i = floresParticulas.length - 1; i >= 0; i--) {
+    for (
+      var i = floresParticulas.length - 1;
+      i >= 0;
+      i--
+    ) {
       var flor = floresParticulas[i];
 
       flor.x += flor.vx;
@@ -159,6 +243,7 @@
       }
 
       floresCtx.save();
+
       floresCtx.globalAlpha = flor.vida;
 
       floresDesenharFlor(
@@ -177,34 +262,66 @@
     }
   }
 
+  // ================================================
+  // CONTROLE DA ANIMAÇÃO
+  // ================================================
+
   function floresSolicitarAnimacao() {
     if (!floresQuadro) {
       floresQuadro = true;
+
       requestAnimationFrame(floresAnimar);
     }
   }
 
-  // SEGUE O CURSOR SEM UMA CAUDA GROSSA
+  // ================================================
+  // MOVIMENTO DO MOUSE
+  // ================================================
+
   function floresMoverMouse(evento) {
-    if (document.hidden) return;
+    if (
+      floresMovimentoReduzido ||
+      document.hidden
+    ) {
+      return;
+    }
 
     var agora = performance.now();
 
-    if (agora - floresUltimoMovimento < floresIntervalo) {
+    if (
+      agora - floresUltimoMovimento <
+      floresIntervalo
+    ) {
       return;
     }
 
     floresUltimoMovimento = agora;
 
-    for (var i = 0; i < floresPorMovimento; i++) {
-      floresCriar(evento.clientX, evento.clientY);
+    for (
+      var i = 0;
+      i < floresPorMovimento;
+      i++
+    ) {
+      floresCriar(
+        evento.clientX,
+        evento.clientY
+      );
     }
 
     floresSolicitarAnimacao();
   }
 
+  // ================================================
+  // INICIALIZAÇÃO
+  // ================================================
+
   function floresIniciar() {
-    if (!document.body || floresTela.isConnected) return;
+    if (
+      !document.body ||
+      floresTela.isConnected
+    ) {
+      return;
+    }
 
     document.body.appendChild(floresTela);
 
@@ -222,18 +339,21 @@
       { passive: true }
     );
 
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden) {
-        floresParticulas.length = 0;
+    document.addEventListener(
+      'visibilitychange',
+      function () {
+        if (document.hidden) {
+          floresParticulas.length = 0;
 
-        floresCtx.clearRect(
-          0,
-          0,
-          floresLargura,
-          floresAltura
-        );
+          floresCtx.clearRect(
+            0,
+            0,
+            floresLargura,
+            floresAltura
+          );
+        }
       }
-    });
+    );
   }
 
   if (document.readyState === 'loading') {
