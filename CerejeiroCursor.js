@@ -62,9 +62,9 @@
     const petalas = [];
     const brilhos = [];
 
-    const MAX_FLORES = 100;
-    const MAX_PETALAS = 180;
-    const MAX_BRILHOS = 90;
+    const MAX_FLORES = 50;
+    const MAX_PETALAS = 80;
+    const MAX_BRILHOS = 50;
 
     function redimensionar() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
