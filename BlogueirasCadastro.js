@@ -258,7 +258,7 @@
         <input id="cmsl-url-imagem" name="urlImagem" type="url"
           placeholder="https://.../minhafoto.jpg" maxlength="1000">
         <small class="cmsl-ajuda">
-          Se tiver uma imagem hospedada na internet, cole o link direto.
+          Se tiver uma imagem hospedada na internet, cole o link direto. Atenção Deve ser o Link da Imagem original, não poder ser link de redes sociais.
         </small>
       </div>
 
