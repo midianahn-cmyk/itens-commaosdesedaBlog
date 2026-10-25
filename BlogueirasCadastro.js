@@ -351,7 +351,7 @@
     })
     .then(function () {
       mostrarMensagem(
-        'O Seu Cadastro foi enviado! E no prazo de 24h a 48h, se os dados estiverem corretos seu Site/Blog/Redes Sociais será aprovado e entrará na lista de nossa Página. Atenção Links de Afiliados não seram aprovados.',
+        'O Seu Cadastro foi enviado! E no prazo de 24h a 48h, se os dados estiverem corretos seu Site/Blog/Redes Sociais será aprovado e entrará na lista de nossa Página. SALVE ESSA PAGIAN NO NAVEGADOR PARA CONFERIR EM ATÉ 24H.  Atenção Links de Afiliados não seram aprovados.',
         'sucesso'
       );
       formulario.reset();
