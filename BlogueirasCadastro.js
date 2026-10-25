@@ -277,8 +277,7 @@
           <input id="cmsl-autoriza-whatsapp"
             name="autorizaWhatsapp" type="checkbox" value="sim">
           <span>
-            Autorizo a divulgação do meu número de WhatsApp no diretório
-            público, para que visitantes possam entrar em contato comigo.
+            Autorizo a divulgação do meu número de WhatsApp na pagina, para que visitantes possam entrar em contato comigo.
             Essa autorização é opcional.
           </span>
         </label>
@@ -352,7 +351,7 @@
     })
     .then(function () {
       mostrarMensagem(
-        'O envio foi iniciado, mas não foi possível confirmar a gravação pela resposta do navegador. Verifique a planilha antes de enviar novamente. Seu cadastro aparecerá no diretório somente depois de ser aprovado.',
+        'O Seu Cadastro foi enviado! E no prazo de 24h a 48h, se os dados estiverem corretos seu Site/Blog/Redes Sociais será aprovado e entrará na lista de nossa Página. Atenção Links de Afiliados não seram aprovados.',
         'sucesso'
       );
       formulario.reset();
