@@ -1,15 +1,20 @@
-
 /* =====================================================
    COM MÃOS DE SEDA — CADASTRO DE ARTESÃS
    Arquivo externo: CadastroArtesas.js
+   Integração com Google Apps Script
+   © 2026 Com Mãos de Seda
    ===================================================== */
+
 (function () {
   'use strict';
 
   var scriptAtual = document.currentScript;
   var raizExistente = document.getElementById('cmsl-cadastro-artesas');
 
-  if (raizExistente && raizExistente.getAttribute('data-iniciado') === 'sim') {
+  if (
+    raizExistente &&
+    raizExistente.getAttribute('data-iniciado') === 'sim'
+  ) {
     return;
   }
 
@@ -23,11 +28,19 @@
   }
 
   if (raiz.getAttribute('data-iniciado') === 'sim') return;
+
   raiz.setAttribute('data-iniciado', 'sim');
 
-  var endpoint = 'https://script.google.com/macros/s/AKfycbwm_t9YiIU4GiyuP6m8C6EbyrBrJkT0bskGLLZ-Dwt3iXsOffh0tMknm1OixJ4-YocGAA/exec';
+  // ENDEREÇO DO APPS SCRIPT — MANTIDO
+  var endpoint =
+    'https://script.google.com/macros/s/AKfycbwm_t9YiIU4GiyuP6m8C6EbyrBrJkT0bskGLLZ-Dwt3iXsOffh0tMknm1OixJ4-YocGAA/exec';
+
+  /* =========================
+     ESTILO ISOLADO DO FORMULÁRIO
+     ========================= */
 
   var estilo = document.createElement('style');
+
   estilo.textContent = `
     #cmsl-cadastro-artesas {
       --cmsl-dourado: #b58a45;
@@ -35,6 +48,7 @@
       --cmsl-fundo: #fffaf3;
       --cmsl-texto: #51463b;
       --cmsl-borda: #e5d6bd;
+
       max-width: 680px;
       margin: 25px auto;
       padding: 25px;
@@ -223,11 +237,17 @@
       }
     }
   `;
+
   document.head.appendChild(estilo);
+
+  /* =========================
+     ESTRUTURA DO FORMULÁRIO
+     ========================= */
 
   raiz.innerHTML = `
     <div class="cmsl-cabecalho">
       <h2>🧵 Cadastro de Artesãs</h2>
+
       <p>
         Seu talento merece ser conhecido! 💛<br>
         Cadastre-se para fazer parte do diretório de artesãs
@@ -236,29 +256,58 @@
     </div>
 
     <form id="cmsl-form-artesas">
+
+      <!-- 1. NOME COMPLETO -->
+
       <div class="cmsl-campo">
-        <label for="cmsl-artesa-atelie">
-  Nome do seu ateliê e Cidade <span class="cmsl-obrigatorio">*</span>
-</label>        
-        <input id="cmsl-artesa-nome" name="nome" type="text"
-          placeholder="Digite seu nome completo" maxlength="150"
-          autocomplete="name" required>
+        <label for="cmsl-artesa-nome">
+          Nome completo
+          <span class="cmsl-obrigatorio">*</span>
+        </label>
+
+        <input
+          id="cmsl-artesa-nome"
+          name="nome"
+          type="text"
+          placeholder="Digite seu nome completo"
+          maxlength="150"
+          autocomplete="name"
+          required
+        >
       </div>
+
+      <!-- 2. E-MAIL -->
 
       <div class="cmsl-campo">
         <label for="cmsl-artesa-email">
-          E-mail <span class="cmsl-obrigatorio">*</span>
+          E-mail
+          <span class="cmsl-obrigatorio">*</span>
         </label>
-        <input id="cmsl-artesa-email" name="email" type="email"
-          placeholder="seuemail@exemplo.com" maxlength="200"
-          autocomplete="email" required>
+
+        <input
+          id="cmsl-artesa-email"
+          name="email"
+          type="email"
+          placeholder="seuemail@exemplo.com"
+          maxlength="200"
+          autocomplete="email"
+          required
+        >
       </div>
+
+      <!-- 3. ESPECIALIDADE -->
 
       <div class="cmsl-campo">
         <label for="cmsl-artesa-especialidade">
-          Qual é sua especialidade? <span class="cmsl-obrigatorio">*</span>
+          Qual é sua especialidade?
+          <span class="cmsl-obrigatorio">*</span>
         </label>
-        <select id="cmsl-artesa-especialidade" name="especialidade" required>
+
+        <select
+          id="cmsl-artesa-especialidade"
+          name="especialidade"
+          required
+        >
           <option value="">Selecione sua especialidade</option>
           <option value="Biscuit e porcelana fria">Biscuit e porcelana fria</option>
           <option value="Amigurumi">Amigurumi</option>
@@ -283,61 +332,128 @@
         </select>
       </div>
 
-      <div class="cmsl-campo" id="cmsl-artesa-outra-box" style="display:none">
+      <!-- CAMPO CONDICIONAL: OUTRA ESPECIALIDADE -->
+
+      <div
+        class="cmsl-campo"
+        id="cmsl-artesa-outra-box"
+        style="display:none"
+      >
         <label for="cmsl-artesa-outra">
-          Escreva sua especialidade <span class="cmsl-obrigatorio">*</span>
+          Escreva sua especialidade
+          <span class="cmsl-obrigatorio">*</span>
         </label>
-        <input id="cmsl-artesa-outra" type="text" maxlength="120"
-          placeholder="Ex.: macramê com pedras naturais" disabled>
-        <span class="cmsl-ajuda">Escreva o tipo de artesanato que você faz.</span>
+
+        <input
+          id="cmsl-artesa-outra"
+          type="text"
+          maxlength="120"
+          placeholder="Ex.: macramê com pedras naturais"
+          disabled
+        >
+
+        <span class="cmsl-ajuda">
+          Escreva o tipo de artesanato que você faz.
+        </span>
       </div>
+
+      <!-- 4. NOME DO ATELIÊ E CIDADE -->
 
       <div class="cmsl-campo">
         <label for="cmsl-artesa-atelie">
-          Nome do seu ateliê <span class="cmsl-obrigatorio">*</span>
+          Nome do seu ateliê e Cidade
+          <span class="cmsl-obrigatorio">*</span>
         </label>
-        <input id="cmsl-artesa-atelie" name="nomeAtelie" type="text"
-          placeholder="Nome da sua marca ou ateliê + Cidade" maxlength="150" required>
+
+        <input
+          id="cmsl-artesa-atelie"
+          name="nomeAtelie"
+          type="text"
+          placeholder="Nome da sua marca ou ateliê + Cidade"
+          maxlength="150"
+          required
+        >
       </div>
+
+      <!-- 5. LINK PARA DIVULGAÇÃO -->
 
       <div class="cmsl-campo">
         <label for="cmsl-artesa-link">
-          Link para divulgação <span class="cmsl-obrigatorio">*</span>
+          Link para divulgação
+          <span class="cmsl-obrigatorio">*</span>
         </label>
-        <input id="cmsl-artesa-link" name="linkDivulgacao" type="url"
+
+        <input
+          id="cmsl-artesa-link"
+          name="linkDivulgacao"
+          type="url"
           placeholder="https://www.instagram.com/seuperfil/"
-          maxlength="1000" required>
+          maxlength="1000"
+          required
+        >
+
         <span class="cmsl-ajuda">
           Pode ser o Instagram, Facebook, loja virtual ou outro endereço
           onde as pessoas encontrem seu trabalho. Inclua https:// no início.
         </span>
       </div>
 
+      <!-- 6. FOTO, LOGOMARCA OU TRABALHO -->
+
       <div class="cmsl-campo">
-        <label for="cmsl-artesa-imagem">URL de uma imagem do seu trabalho</label>
-        <input id="cmsl-artesa-imagem" name="urlImagem" type="url"
-          placeholder="https://... (opcional)" maxlength="2000">
+        <label for="cmsl-artesa-imagem">
+          Sua foto ou da Logomarca ou de um Trabalho
+        </label>
+
+        <input
+          id="cmsl-artesa-imagem"
+          name="urlImagem"
+          type="url"
+          placeholder="https://... (opcional)"
+          maxlength="2000"
+        >
+
         <span class="cmsl-ajuda">
-          Opcional. Cole o endereço direto de uma imagem publicada na internet.
+          Opcional. Cole o endereço direto de uma imagem publicada
+          na internet. Pode ser sua foto, a logomarca do ateliê
+          ou uma foto de um trabalho artesanal.
         </span>
       </div>
 
+      <!-- 7. WHATSAPP -->
+
       <div class="cmsl-campo">
         <label for="cmsl-artesa-whatsapp">
-          WhatsApp com DDD <span class="cmsl-obrigatorio">*</span>
+          WhatsApp com DDD
+          <span class="cmsl-obrigatorio">*</span>
         </label>
-        <input id="cmsl-artesa-whatsapp" name="whatsapp" type="tel"
-          placeholder="Ex.: (21) 99999-9999" maxlength="25"
-          autocomplete="tel" required>
+
+        <input
+          id="cmsl-artesa-whatsapp"
+          name="whatsapp"
+          type="tel"
+          placeholder="Ex.: (21) 99999-9999"
+          maxlength="25"
+          autocomplete="tel"
+          required
+        >
+
         <span class="cmsl-ajuda">
           Informe o número com DDD. O código do Brasil será acrescentado
           automaticamente se estiver ausente.
         </span>
       </div>
 
+      <!-- AUTORIZAÇÃO PARA DIVULGAÇÃO DO WHATSAPP -->
+
       <div class="cmsl-privacidade">
-        <input id="cmsl-artesa-autoriza-whatsapp" name="autorizaWhatsapp"
-          type="checkbox" value="sim">
+        <input
+          id="cmsl-artesa-autoriza-whatsapp"
+          name="autorizaWhatsapp"
+          type="checkbox"
+          value="sim"
+        >
+
         <label for="cmsl-artesa-autoriza-whatsapp">
           <strong>Autorizo a divulgação pública do meu WhatsApp</strong>
           no diretório de artesãs, para que pessoas interessadas possam
@@ -346,19 +462,37 @@
         </label>
       </div>
 
-      <button type="submit" id="cmsl-botao-artesas" class="cmsl-botao">
+      <!-- BOTÃO DE ENVIO -->
+
+      <button
+        type="submit"
+        id="cmsl-botao-artesas"
+        class="cmsl-botao"
+      >
         ✨ Enviar meu cadastro
       </button>
 
-      <div id="cmsl-mensagem-artesas" role="status" aria-live="polite"></div>
+      <div
+        id="cmsl-mensagem-artesas"
+        role="status"
+        aria-live="polite"
+      ></div>
+
     </form>
 
     <div class="cmsl-rodape">
       Feito com carinho por
-      <a href="https://www.commaosdesedaoficial.com"
-        target="_blank" rel="noopener noreferrer">Com Mãos de Seda</a> 💛
+      <a
+        href="https://www.commaosdesedaoficial.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >Com Mãos de Seda</a> 💛
     </div>
   `;
+
+  /* =========================
+     REFERÊNCIAS DOS ELEMENTOS
+     ========================= */
 
   var formulario = raiz.querySelector('#cmsl-form-artesas');
   var campoEspecialidade = raiz.querySelector('#cmsl-artesa-especialidade');
@@ -369,9 +503,14 @@
   var botao = raiz.querySelector('#cmsl-botao-artesas');
   var mensagem = raiz.querySelector('#cmsl-mensagem-artesas');
 
+  /* =========================
+     MENSAGENS DO FORMULÁRIO
+     ========================= */
+
   function mostrarMensagem(texto, tipo) {
     mensagem.textContent = texto;
-    mensagem.className = tipo === 'erro' ? 'cmsl-erro' : 'cmsl-sucesso';
+    mensagem.className =
+      tipo === 'erro' ? 'cmsl-erro' : 'cmsl-sucesso';
     mensagem.style.display = 'block';
   }
 
@@ -381,30 +520,53 @@
     mensagem.style.display = 'none';
   }
 
+  /* =========================
+     OUTRA ESPECIALIDADE
+     ========================= */
+
   campoEspecialidade.addEventListener('change', function () {
     var outra = campoEspecialidade.value === 'Outro';
+
     caixaOutra.style.display = outra ? 'block' : 'none';
     campoOutra.disabled = !outra;
     campoOutra.required = outra;
-    if (!outra) campoOutra.value = '';
+
+    if (!outra) {
+      campoOutra.value = '';
+    }
   });
+
+  /* =========================
+     FORMATAÇÃO DO WHATSAPP
+     ========================= */
 
   campoWhatsapp.addEventListener('input', function () {
     this.value = this.value.replace(/[^\d+\s().-]/g, '');
   });
 
+  /* =========================
+     ENVIO PARA A PLANILHA
+     ========================= */
+
   formulario.addEventListener('submit', function (evento) {
     evento.preventDefault();
     esconderMensagem();
 
-    if (!formulario.reportValidity()) return;
+    if (!formulario.reportValidity()) {
+      return;
+    }
 
     var especialidade = campoEspecialidade.value;
 
     if (especialidade === 'Outro') {
       especialidade = campoOutra.value.trim();
+
       if (!especialidade) {
-        mostrarMensagem('Por favor, escreva sua especialidade.', 'erro');
+        mostrarMensagem(
+          'Por favor, escreva sua especialidade.',
+          'erro'
+        );
+
         campoOutra.focus();
         return;
       }
@@ -425,19 +587,46 @@
         'Confira o WhatsApp: informe o DDD e o número correto.',
         'erro'
       );
+
       campoWhatsapp.focus();
       return;
     }
 
     var dados = new URLSearchParams();
-    dados.append('nome', raiz.querySelector('[name="nome"]').value.trim());
-    dados.append('email', raiz.querySelector('[name="email"]').value.trim());
+
+    dados.append(
+      'nome',
+      raiz.querySelector('[name="nome"]').value.trim()
+    );
+
+    dados.append(
+      'email',
+      raiz.querySelector('[name="email"]').value.trim()
+    );
+
     dados.append('especialidade', especialidade);
-    dados.append('nomeAtelie', raiz.querySelector('[name="nomeAtelie"]').value.trim());
-    dados.append('linkDivulgacao', raiz.querySelector('[name="linkDivulgacao"]').value.trim());
-    dados.append('urlImagem', raiz.querySelector('[name="urlImagem"]').value.trim());
+
+    dados.append(
+      'nomeAtelie',
+      raiz.querySelector('[name="nomeAtelie"]').value.trim()
+    );
+
+    dados.append(
+      'linkDivulgacao',
+      raiz.querySelector('[name="linkDivulgacao"]').value.trim()
+    );
+
+    dados.append(
+      'urlImagem',
+      raiz.querySelector('[name="urlImagem"]').value.trim()
+    );
+
     dados.append('whatsapp', whatsapp);
-    dados.append('autorizaWhatsapp', campoAutorizacao.checked ? 'sim' : 'nao');
+
+    dados.append(
+      'autorizaWhatsapp',
+      campoAutorizacao.checked ? 'sim' : 'nao'
+    );
 
     botao.disabled = true;
     botao.textContent = 'Enviando cadastro...';
@@ -452,26 +641,28 @@
       mode: 'no-cors',
       body: dados
     })
-    .then(function () {
-      mostrarMensagem(
-        'O envio foi iniciado, mas não é possível confirmar a gravação automaticamente. Confira se o cadastro apareceu na planilha antes de considerar o recebimento confirmado.',
-        'sucesso'
-      );
+      .then(function () {
+        mostrarMensagem(
+          'O envio foi iniciado, mas não é possível confirmar a gravação automaticamente. Confira se o cadastro apareceu na planilha antes de considerar o recebimento confirmado.',
+          'sucesso'
+        );
 
-      formulario.reset();
-      caixaOutra.style.display = 'none';
-      campoOutra.disabled = true;
-      campoOutra.required = false;
-    })
-    .catch(function () {
-      mostrarMensagem(
-        'Não foi possível iniciar o envio. Verifique sua conexão e tente novamente.',
-        'erro'
-      );
-    })
-    .finally(function () {
-      botao.disabled = false;
-      botao.textContent = '✨ Enviar meu cadastro';
-    });
+        formulario.reset();
+
+        caixaOutra.style.display = 'none';
+        campoOutra.disabled = true;
+        campoOutra.required = false;
+      })
+      .catch(function () {
+        mostrarMensagem(
+          'Não foi possível iniciar o envio. Verifique sua conexão e tente novamente.',
+          'erro'
+        );
+      })
+      .finally(function () {
+        botao.disabled = false;
+        botao.textContent = '✨ Enviar meu cadastro';
+      });
   });
+
 })();
