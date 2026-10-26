@@ -294,7 +294,7 @@
 
       <div class="cmsl-campo">
         <label for="cmsl-artesa-atelie">
-          Nome do seu ateliê <span class="cmsl-obrigatorio">*</span>
+          Nome do seu ateliê e Cidade <span class="cmsl-obrigatorio">*</span>
         </label>
         <input id="cmsl-artesa-atelie" name="nomeAtelie" type="text"
           placeholder="Nome da sua marca ou ateliê" maxlength="150" required>
