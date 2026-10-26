@@ -237,9 +237,9 @@
 
     <form id="cmsl-form-artesas">
       <div class="cmsl-campo">
-        <label for="cmsl-artesa-nome">
-          Nome do seu ateliê e Cidade <span class="cmsl-obrigatorio">*</span>
-        </label>
+        <label for="cmsl-artesa-atelie">
+  Nome do seu ateliê e Cidade <span class="cmsl-obrigatorio">*</span>
+</label>        
         <input id="cmsl-artesa-nome" name="nome" type="text"
           placeholder="Digite seu nome completo" maxlength="150"
           autocomplete="name" required>
