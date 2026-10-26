@@ -402,7 +402,7 @@
 
       <div class="cmsl-campo">
         <label for="cmsl-artesa-imagem">
-         Cole o link se sua foto, Logomarca ou Trabalho.
+         Cole o link de sua foto, Logomarca ou Trabalho.
         </label>
 
         <input
