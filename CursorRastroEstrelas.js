@@ -35,7 +35,7 @@ var comprimentoRastro = 65;       // Comprimento da cauda que acompanha o cursor
 var larguraRastro = 12;           // Espessura da cauda luminosa
 
   // Intensidade do brilho dourado
-var intensidadeBrilho = 18;      // Intensidade do brilho e do halo dourado
+var intensidadeBrilho = 5;      // Intensidade do brilho e do halo dourado
 
   // Duração das partículas
   var decaimentoMinimo = 0.002;
