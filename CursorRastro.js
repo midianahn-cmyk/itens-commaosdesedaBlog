@@ -24,18 +24,18 @@
   // CONFIGURAÇÕES — INTENSIDADE DO EFEITO
   // ================================================
 
-  var limiteParticulas = 300;
-  var particulasPorMovimento = 12;
-  var intervaloMinimo = 1;
+  var limiteParticulas = 180;       // Quantidade máxima de partículas simultâneas
+var particulasPorMovimento = 5;   // Quantidade de partículas criadas a cada movimento do mouse
+var intervaloMinimo = 2;          // Intervalo mínimo (ms) entre as criações de partículas
 
   // Aumente para uma cauda mais comprida
-  var comprimentoRastro = 65;
+var comprimentoRastro = 65;       // Comprimento da cauda que acompanha o cursor
 
   // Aumente para uma cauda mais larga
-  var larguraRastro = 100;
+var larguraRastro = 12;           // Espessura da cauda luminosa
 
   // Intensidade do brilho dourado
-  var intensidadeBrilho = 32;
+var intensidadeBrilho = 18;      // Intensidade do brilho e do halo dourado
 
   // Duração das partículas
   var decaimentoMinimo = 0.002;
