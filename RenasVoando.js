@@ -16,7 +16,6 @@ Todos os direitos reservados.
 
   /* EVITA INSTALAÇÃO DUPLICADA */
   if (window.cmslNoelVoadoraIniciada) return;
-  window.cmslNoelVoadoraIniciada = true;
 
   /* =========================================
      HTML DO EFEITO
@@ -97,8 +96,6 @@ Todos os direitos reservados.
 
   var css = `
 
-  /* ÁREA DA ANIMAÇÃO */
-
   #noel-blogger {
     position: fixed;
     inset: 0;
@@ -108,8 +105,6 @@ Todos os direitos reservados.
     pointer-events: none;
     z-index: 999990;
   }
-
-  /* PERSONAGEM */
 
   #noel-personagem {
     position: absolute;
@@ -127,8 +122,6 @@ Todos os direitos reservados.
     animation: noel-voo 9s linear forwards;
   }
 
-  /* NOEL */
-
   .noel-emoji {
     display: inline-block;
     line-height: 1;
@@ -143,8 +136,6 @@ Todos os direitos reservados.
     object-fit: contain;
   }
 
-  /* ÁRVORE */
-
   .imagem-arvore {
     display: block;
     width: 200px;
@@ -157,8 +148,6 @@ Todos os direitos reservados.
     top: -65px;
     animation: noel-magica .7s ease-in-out infinite alternate;
   }
-
-  /* ESTRELA */
 
   .noel-brilho {
     display: inline-block;
@@ -174,8 +163,6 @@ Todos os direitos reservados.
     height: auto;
     object-fit: contain;
   }
-
-  /* HO HO HO */
 
   .noel-Hohoho {
     position: absolute;
@@ -198,75 +185,56 @@ Todos os direitos reservados.
   #noel-controle {
     position: fixed !important;
     right: 12px !important;
-    bottom: 200px !important; /* Posição vertical da caixa */
+    bottom: 200px !important;
     top: auto !important;
     left: auto !important;
-
     z-index: 2147483647 !important;
     isolation: isolate !important;
-
     display: block !important;
     width: max-content !important;
     max-width: calc(100vw - 24px) !important;
     height: auto !important;
-
     overflow: visible !important;
     margin: 0 !important;
     padding: 0 !important;
     box-sizing: border-box !important;
-
     visibility: visible !important;
   }
-
-  /* CAIXA VERMELHA */
 
   #noel-botao-caixa {
     position: relative !important;
     display: block !important;
-
     width: max-content !important;
     max-width: calc(100vw - 24px) !important;
     box-sizing: border-box !important;
-
     margin: 0 !important;
     padding: 0 0 5px !important;
-
     background: red !important;
     border: 1px solid #ffffff !important;
     border-radius: 15px !important;
-
     box-shadow: 0 2px 10px #0003 !important;
     overflow: visible !important;
   }
 
-  /* BOTÃO DE ATIVAÇÃO */
-
   #noel-botao-caixa > #noel-som {
     position: relative !important;
     z-index: 1 !important;
-
     display: block !important;
     width: 100% !important;
     height: auto !important;
     box-sizing: border-box !important;
-
     margin: 0 !important;
     padding: 5px 8px !important;
-
     border: 0 !important;
     border-radius: 13px 13px 0 0 !important;
-
     background: transparent !important;
     color: #fff !important;
-
     font: bold 13px Arial, sans-serif !important;
     text-align: center !important;
     white-space: nowrap !important;
-
     cursor: pointer !important;
     box-shadow: none !important;
     transform: none !important;
-
     opacity: 1 !important;
     visibility: visible !important;
   }
@@ -275,28 +243,21 @@ Todos os direitos reservados.
     background: green !important;
   }
 
-  /* CRÉDITO */
-
   #noel-botao-caixa > #credito-noel {
     position: static !important;
     z-index: auto !important;
-
     display: block !important;
     width: 100% !important;
     height: auto !important;
     min-height: 13px !important;
-
     box-sizing: border-box !important;
     margin: 0 !important;
     padding: 0 5px !important;
-
     background: transparent !important;
     color: #d8a5ff !important;
-
     font: 10px/1.4 Arial, sans-serif !important;
     text-align: center !important;
     text-decoration: none !important;
-
     opacity: .95 !important;
     visibility: visible !important;
     pointer-events: auto !important;
@@ -308,39 +269,28 @@ Todos os direitos reservados.
     opacity: 1 !important;
   }
 
-  /* BOTÃO X */
-
   #noel-controle > #noel-fechar {
     position: absolute !important;
     top: -10px !important;
     right: -10px !important;
-
     z-index: 2147483647 !important;
     isolation: isolate !important;
-
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-
     width: 25px !important;
     height: 25px !important;
     box-sizing: border-box !important;
-
     margin: 0 !important;
     padding: 0 !important;
-
     border: 1px solid #fff !important;
     border-radius: 50% !important;
-
     background: #9b3d3d !important;
     color: #fff !important;
-
     font: bold 13px Arial, sans-serif !important;
     line-height: 1 !important;
-
     cursor: pointer !important;
     box-shadow: 0 2px 5px #0003 !important;
-
     opacity: 1 !important;
     visibility: visible !important;
   }
@@ -349,15 +299,13 @@ Todos os direitos reservados.
     background: #762b2b !important;
   }
 
-  /* ACESSIBILIDADE */
-
   #noel-som:focus-visible,
   #noel-fechar:focus-visible {
     outline: 3px solid #d8a5ff !important;
     outline-offset: 3px !important;
   }
 
-  /* TRAJETO DO VOO */
+  /* TRAJETO */
 
   @keyframes noel-voo {
     0% {
@@ -398,39 +346,30 @@ Todos os direitos reservados.
     }
   }
 
-  /* BALANÇO */
-
   @keyframes noel-balanco {
     from {
       transform: translateY(-5px) rotate(-5deg);
     }
-
     to {
       transform: translateY(5px) rotate(5deg);
     }
   }
-
-  /* ÁRVORE MÁGICA */
 
   @keyframes noel-magica {
     from {
       opacity: .45;
       transform: scale(.8) rotate(-10deg);
     }
-
     to {
       opacity: 1;
       transform: scale(1.2) rotate(10deg);
     }
   }
 
-  /* GARGALHADA */
-
   @keyframes noel-riso {
     from {
       transform: rotate(-8deg) scale(1);
     }
-
     to {
       transform: rotate(5deg) scale(1.08);
     }
@@ -510,21 +449,60 @@ Todos os direitos reservados.
 
   function instalarNoel() {
 
-    if (document.getElementById('noel-blogger')) return;
+    if (!document.body) return false;
 
-    var container = document.createElement('div');
-    container.id = 'cmsl-noel-container';
-    container.innerHTML = html;
+    if (
+      document.getElementById('noel-blogger') ||
+      document.getElementById('cmsl-noel-container')
+    ) {
+      window.cmslNoelVoadoraIniciada = true;
+      return true;
+    }
 
-    document.body.appendChild(container);
+    try {
 
-    var estilo = document.createElement('style');
-    estilo.id = 'cmsl-noel-estilo';
-    estilo.textContent = css;
+      var container = document.createElement('div');
+      container.id = 'cmsl-noel-container';
+      container.innerHTML = html;
 
-    document.head.appendChild(estilo);
+      var estilo = document.createElement('style');
+      estilo.id = 'cmsl-noel-estilo';
+      estilo.textContent = css;
 
-    iniciarNoel();
+      document.body.appendChild(container);
+      document.head.appendChild(estilo);
+
+      iniciarNoel();
+
+      window.cmslNoelVoadoraIniciada = true;
+
+      return true;
+
+    } catch (erro) {
+
+      console.error(
+        '[Com Mãos de Seda] Erro ao instalar a Noel:',
+        erro
+      );
+
+      var containerExistente = document.getElementById(
+        'cmsl-noel-container'
+      );
+
+      if (containerExistente) {
+        containerExistente.remove();
+      }
+
+      var estiloExistente = document.getElementById(
+        'cmsl-noel-estilo'
+      );
+
+      if (estiloExistente) {
+        estiloExistente.remove();
+      }
+
+      return false;
+    }
   }
 
   /* =========================================
@@ -540,7 +518,7 @@ Todos os direitos reservados.
     var fechar = document.getElementById('noel-fechar');
 
     if (!personagem || !botao || !audio || !controle || !fechar) {
-      return;
+      throw new Error('Não foi possível localizar os elementos da Noel.');
     }
 
     var somAtivado = false;
@@ -566,7 +544,10 @@ Todos os direitos reservados.
       voandoAgora = false;
 
       audio.pause();
-      audio.currentTime = 0;
+
+      try {
+        audio.currentTime = 0;
+      } catch (e) {}
     }
 
     /* REPRODUZ A GARGALHADA */
@@ -576,6 +557,7 @@ Todos os direitos reservados.
       if (!somAtivado || suspensa) return;
 
       audio.currentTime = 0;
+      audio.volume = 0.50;
 
       var reproducao = audio.play();
 
@@ -604,10 +586,8 @@ Todos os direitos reservados.
 
     function voar() {
 
-      if (suspensa) return;
-
-      if (document.hidden) {
-        agendarProximo();
+      if (suspensa || document.hidden) {
+        if (!suspensa) agendarProximo();
         return;
       }
 
@@ -655,7 +635,11 @@ Todos os direitos reservados.
         botao.textContent = '🔇 Ativar Hohoho!';
 
         audio.pause();
-        audio.currentTime = 0;
+
+        try {
+          audio.currentTime = 0;
+        } catch (e) {}
+
       }
 
     });
@@ -672,10 +656,14 @@ Todos os direitos reservados.
 
       controle.style.setProperty('display', 'block', 'important');
 
+      if (!somAtivado) {
+        botao.textContent = '🔊 Ativar Hohoho!';
+      }
+
       agendarProximo();
     }
 
-    /* VERIFICA SE A SUSPENSÃO AINDA ESTÁ ATIVA */
+    /* VERIFICA A SUSPENSÃO */
 
     function aplicarSuspensaoRestante() {
 
@@ -756,21 +744,29 @@ Todos os direitos reservados.
   }
 
   /* =========================================
-     INICIALIZAÇÃO
+     INICIALIZAÇÃO SEGURA
   ========================================= */
 
-  if (document.readyState === 'loading') {
+  function iniciarInstalacao() {
 
-    document.addEventListener(
-      'DOMContentLoaded',
-      instalarNoel,
-      { once: true }
-    );
+    if (window.cmslNoelVoadoraIniciada) return;
 
-  } else {
+    if (instalarNoel()) return;
 
-    instalarNoel();
+    /* TENTA NOVAMENTE QUANDO O BODY ESTIVER DISPONÍVEL */
+
+    if (!document.body) {
+
+      document.addEventListener(
+        'DOMContentLoaded',
+        iniciarInstalacao,
+        { once: true }
+      );
+
+    }
 
   }
+
+  iniciarInstalacao();
 
 })();
