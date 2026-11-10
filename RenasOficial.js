@@ -384,7 +384,7 @@ Todos os direitos reservados.
     }
 
     .imagem-noel {
-  width: 28vw;
+  width: 35vw;
   max-width: 120px;
   min-width: 90px;
   height: auto;
