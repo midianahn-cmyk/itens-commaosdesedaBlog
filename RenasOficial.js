@@ -384,8 +384,11 @@ Todos os direitos reservados.
     }
 
     .imagem-noel {
-      width: 68px;
-    }
+  width: 28vw;
+  max-width: 120px;
+  min-width: 90px;
+  height: auto;
+}
 
     .imagem-arvore {
       width: 35px;
