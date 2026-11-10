@@ -258,7 +258,7 @@
         <input id="cmsl-url-imagem" name="urlImagem" type="url"
           placeholder="https://.../minhafoto.jpg" maxlength="1000">
         <small class="cmsl-ajuda">
-          Se tiver uma imagem hospedada na internet, cole o link direto. Atenção Deve ser o Link da Imagem original, não poder ser link de redes sociais.
+          Opcional. Cole o endereço/link direto de uma imagem sua publicada na internet. Não pode ser o link dela em uma Rede Social tem que ser o link nativo da imagem - Geralmente inicia com https:/... e terminado com .png, .gif, .jpg, .jpeg, .webp, .svg, .avif, .bmp, .tif, .tiff, .ico, .apng, .jfif, .pjpeg, .pjp, .heic, .heif, .jxl, .tga, .psd, .eps, .ai, .raw, .dng, .cr2, .nef, .arw, .orf ou .rw2. <b>Se não colocar o link certo sua imagem sera a Padrão de nosso Aplicativo.</b>
         </small>
       </div>
 
