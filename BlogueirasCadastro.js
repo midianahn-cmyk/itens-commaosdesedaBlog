@@ -194,11 +194,11 @@
     </style>
 
     <div class="cmsl-cabecalho">
-      <h2>🌷 Cadastre seu Blog</h2>
+      <h2>🌷 Cadastre seu LINK</h2>
       <p>
         Vamos conhecer o seu cantinho na internet!
         Preencha os dados abaixo para participar do nosso
-        diretório de blogueiras.
+        diretório de Influencers e Empreendedores de Todas as areas.
       </p>
     </div>
 
@@ -220,7 +220,7 @@
       </div>
 
       <div class="cmsl-campo">
-        <label for="cmsl-nicho">Qual é o nicho do seu blog? <span class="cmsl-obrigatorio">*</span></label>
+        <label for="cmsl-nicho">Qual é o nicho do seu Empreendimento? <span class="cmsl-obrigatorio">*</span></label>
         <select id="cmsl-nicho" name="nicho" required>
           <option value="">Selecione uma opção</option>
           <option>Artesanato</option>
@@ -239,15 +239,15 @@
       </div>
 
       <div class="cmsl-campo">
-        <label for="cmsl-nome-blog">Nome do blog <span class="cmsl-obrigatorio">*</span></label>
+        <label for="cmsl-nome-blog">Nome do Empreendimento<span class="cmsl-obrigatorio">*</span></label>
         <input id="cmsl-nome-blog" name="nomeBlog" type="text"
           maxlength="180" required>
       </div>
 
       <div class="cmsl-campo">
-        <label for="cmsl-link-blog">Link do blog <span class="cmsl-obrigatorio">*</span></label>
+        <label for="cmsl-link-blog">Link do seu empreendimento <span class="cmsl-obrigatorio">*</span></label>
         <input id="cmsl-link-blog" name="linkBlog" type="url"
-          placeholder="https://seublog.com" maxlength="1000" required>
+          placeholder="https://...." maxlength="1000" required>
         <small class="cmsl-ajuda">
           Inclua o endereço completo, começando com https:// ou http://.
         </small>
