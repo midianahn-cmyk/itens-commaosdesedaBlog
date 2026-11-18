@@ -6,8 +6,8 @@
 
   const css = `
     .cms-caixa-destaque {
-      width: 90%;
-      max-width: 1100px;
+      width: 100%;
+      max-width: 95%;
       margin: 25px auto;
       display: flex;
       align-items: stretch;
