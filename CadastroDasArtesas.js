@@ -388,7 +388,7 @@
           id="cmsl-artesa-link"
           name="linkDivulgacao"
           type="url"
-          placeholder="https://www.instagram.com/seuperfil/"
+          placeholder="https://..."
           maxlength="1000"
           required
         >
