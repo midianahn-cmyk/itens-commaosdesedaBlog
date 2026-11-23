@@ -191,12 +191,19 @@
 
     /* GLOBO */
 
-    #cmsl-globo-historico #cmsl-globo-container {
-      width: 100%;
-      height: 480px;
-      position: relative;
-      background: transparent;
-    }
+   /* GLOBO QUADRADO E RESPONSIVO */
+
+#cmsl-globo-historico #cmsl-globo-container {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  margin: 0 auto;
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+}
 
     /* MARCADOR EXTERNO */
 
