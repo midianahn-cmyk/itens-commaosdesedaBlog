@@ -958,8 +958,7 @@
             coracaoHistorico.className =
               'cmsl-globo-coracao-historico';
 
-            coracaoHistorico.textContent =
-              '\\u2764\\uFE0E';
+        coracaoHistorico.textContent = '\u2764\uFE0E';
 
             coracaoHistorico.style.color =
               corDoPonto(d);
