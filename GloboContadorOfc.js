@@ -4,7 +4,7 @@
  * Globo histórico de visitantes - © 2026
  * https://www.commaosdesedaoficial.com
  * Arquivo externo autocontido para Blogger.
- */
+ */ 
 (function () {
   'use strict';
 
